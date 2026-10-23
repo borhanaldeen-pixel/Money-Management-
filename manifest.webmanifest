@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "منظومة الراتب والمصروف ودفتر الديون",
+  "short_name": "المنظومة المالية",
+  "description": "منظومة موحدة لإدارة الراتب والمصروف اليومي ودفتر الديون، وتعمل بدون إنترنت.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0716",
+  "theme_color": "#53051D",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
