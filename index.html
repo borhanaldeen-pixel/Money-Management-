@@ -2719,4 +2719,2921 @@
                         <!-- الأرقام التفصيلية لتناقص الراتب -->
                         <div class="depletion-stats-col">
                             <div class="remain-spotlight">
-                                <div class="remain-spotlight-label">المتبقي الصافي القابل للصرف ال
+                                <div class="remain-spotlight-label">المتبقي الصافي القابل للصرف الآن</div>
+                                <div class="remain-spotlight-val">
+                                    <span id="remainingSalaryHero">0</span>
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--c7);">ر.ي</span>
+                                </div>
+                            </div>
+
+                            <div class="depletion-mini-row">
+                                <div class="dep-mini-box">
+                                    <div class="dep-mini-label">الراتب المعتمد للصرف</div>
+                                    <div class="dep-mini-val" style="color: var(--c12);"><span id="startingBudgetDisplay">0</span> ر.ي</div>
+                                </div>
+                                <div class="dep-mini-box">
+                                    <div class="dep-mini-label">إجمالي ما نقص (مع السداد)</div>
+                                    <div class="dep-mini-val" style="color: var(--c4);">- <span id="totalSpentHero">0</span> ر.ي</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- شريط خزان السيولة -->
+                    <div class="battery-tank-wrap">
+                        <div class="battery-header">
+                            <span>مؤشر سيولة الراتب</span>
+                            <span id="savingsLockNotice" style="color: var(--c23);">خزنة الادخار: 0 ر.ي</span>
+                        </div>
+                        <div class="battery-track">
+                            <div class="battery-fill-remain" id="liquidBatteryFill" style="width: 100%;"></div>
+                        </div>
+                        <div class="pace-indicator-bar">
+                            <span id="monthPaceText">انقضى من الشهر: --% | استهلكت: 0%</span>
+                            <strong id="paceVerdictText" style="color: var(--c23);">إيقاع صرف آمن</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. منصة الإدخال اليومي السريع فائقة السلاسة -->
+                <div class="glass-card smooth-entry-card col-12">
+                    <div class="cell-header" style="margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c5); color: var(--c5);"></span>
+                            تسجيل سريع لمصروف اليوم
+                        </h4>
+                        <div class="instant-mode-toggle" id="instantTapToggle" title="عند التفعيل: اكتب المبلغ ثم المس الفئة ليتم خصمه فوراً بضغطة واحدة">
+                            <span class="toggle-dot"></span>
+                            <span>⚡ خصم فوري بلمس الفئة</span>
+                        </div>
+                    </div>
+
+                    <!-- أزرار الصرف المتكرر بضغطة واحدة -->
+                    <div class="one-tap-presets-wrap">
+                        <div class="presets-header">
+                            <span>⚡ خصم فوري بضغطة واحدة (الأكثر تكراراً):</span>
+                            <span style="opacity: 0.75; font-size: 0.63rem;">المس للخصم المباشر</span>
+                        </div>
+                        <div class="presets-scroll" id="quickPresetsBar"></div>
+                    </div>
+
+                    <!-- حقل المبلغ الكبير والواضح -->
+                    <div class="big-amount-box">
+                        <input type="number" id="dailyExpenseAmountInput" placeholder="أدخل المبلغ المصروف... (أو اختر من الأزرار)" inputmode="decimal">
+                        <button type="button" class="clear-amount-inline" id="clearAmountBtn">مسح ✕</button>
+                    </div>
+
+                    <!-- شريط المعاينة الحية لتأثير المبلغ قبل الحفظ -->
+                    <div class="live-impact-preview" id="liveImpactPreview">
+                        <span id="livePreviewText">بعد خصم هذا المبلغ سيصبح المتبقي: 0 ر.ي</span>
+                        <strong id="livePreviewPct" style="color: var(--c4);">-0%</strong>
+                    </div>
+
+                    <!-- أزرار إضافة المبالغ السريعة التراكمية -->
+                    <div class="fast-money-grid">
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(500)">+500</button>
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(1000)">+1,000</button>
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(2000)">+2,000</button>
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(3000)">+3,000</button>
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(5000)">+5,000</button>
+                        <button type="button" class="money-step-btn" onclick="addQuickExpenseAmount(10000)">+10,000</button>
+                    </div>
+
+                    <!-- شبكة فئات الصرف (تضم القات، السيارة، وسداد الديون) -->
+                    <div style="font-size: 0.74rem; font-weight: 800; color: var(--text-muted); display:flex; justify-content:space-between;">
+                        <span>اختر الفئة:</span>
+                        <span id="selectedCatHint" style="color: var(--c12);">الفئة المختارة: 🌿 قات</span>
+                    </div>
+
+                    <div class="category-pills-grid" id="categoryPillsContainer">
+                        <button type="button" class="cat-pill active" data-cat="qat" data-name="قات" data-icon="🌿">
+                            <span class="cat-emoji">🌿</span><span>قات</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="car" data-name="للسياره" data-icon="🚗">
+                            <span class="cat-emoji">🚗</span><span>للسياره</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="debt_pay" data-name="سداد ديون" data-icon="💳">
+                            <span class="cat-emoji">💳</span><span>سداد ديون</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="groceries" data-name="مقاضي ومنزل" data-icon="🛒">
+                            <span class="cat-emoji">🛒</span><span>مقاضي ومنزل</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="food" data-name="مطاعم وكافيه" data-icon="🍽️">
+                            <span class="cat-emoji">🍽️</span><span>مطاعم وكافيه</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="family" data-name="عائلة وأبناء" data-icon="👨‍👩‍👧">
+                            <span class="cat-emoji">👨‍👩‍👧</span><span>عائلة وأبناء</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="bills" data-name="فواتير ونت" data-icon="⚡">
+                            <span class="cat-emoji">⚡</span><span>فواتير ونت</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="health" data-name="صحة وصيدلية" data-icon="💊">
+                            <span class="cat-emoji">💊</span><span>صحة وصيدلية</span>
+                        </button>
+                        <button type="button" class="cat-pill" data-cat="other" data-name="نثريات وأخرى" data-icon="📦">
+                            <span class="cat-emoji">📦</span><span>نثريات أخرى</span>
+                        </button>
+                    </div>
+
+                    <!-- سطر التاريخ المبسط (اليوم / أمس) + الملاحظة السريعة -->
+                    <div class="compact-meta-row">
+                        <div class="day-quick-selector">
+                            <button type="button" class="day-pill-btn active" data-daymode="today">اليوم</button>
+                            <button type="button" class="day-pill-btn" data-daymode="yesterday">أمس</button>
+                            <button type="button" class="day-pill-btn" data-daymode="custom">📅 آخر</button>
+                        </div>
+                        <input type="text" id="expenseNoteInput" class="compact-note-input" placeholder="ملاحظة سريعة أو اسم الجهة (اختياري)...">
+                    </div>
+
+                    <!-- حقل التاريخ المخصص -->
+                    <div class="custom-date-drawer" id="customDateDrawer">
+                        <div class="input-wrapper">
+                            <input type="date" id="expenseDateInput" style="padding-left: 14px; font-size: 0.86rem;">
+                        </div>
+                    </div>
+
+                    <!-- أزرار الحفظ والتراجع السريع -->
+                    <div class="action-submit-row">
+                        <button type="button" class="add-expense-btn" id="addExpenseRecordBtn">
+                            <span>➕ خصم من الراتب الآن</span>
+                        </button>
+                        <button type="button" class="undo-last-btn" id="undoLastExpenseBtn" title="التراجع عن آخر عملية صرف تم إدخالها">
+                            <span>↩️ تراجع</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. ثلاث بطاقات ذكاء مالي استباقية -->
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(0, 198, 199, 0.18); color: var(--c6);">🎯</div>
+                    <div class="insight-val"><span id="safeDailyLimitDisplay">0</span></div>
+                    <div class="insight-label">الحد اليومي الآمن (ر.ي)</div>
+                </div>
+
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(238, 172, 77, 0.18); color: var(--c11);">🔥</div>
+                    <div class="insight-val"><span id="dailyBurnAvgDisplay">0</span></div>
+                    <div class="insight-label">متوسط صرفك اليومي</div>
+                </div>
+
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(117, 224, 176, 0.18); color: var(--c23);">⏳</div>
+                    <div class="insight-val" id="runwayDaysDisplay">-- يوم</div>
+                    <div class="insight-label">كفاية الرصيد المتبقي</div>
+                </div>
+
+                <!-- 4. درج قابل للطي لإعدادات الخزنة والرصيد الإضافي -->
+                <div class="settings-accordion">
+                    <button type="button" class="accordion-trigger" id="toggleBudgetSettingsBtn">
+                        <span>⚙️ إعدادات خزنة الادخار والرصيد الإضافي (اختياري)</span>
+                        <span id="accordionArrow">▼</span>
+                    </button>
+                    <div class="accordion-body" id="budgetSettingsBody">
+                        <div class="glass-card bento-cell">
+                            <div>
+                                <h4 class="cell-title">
+                                    <span class="dot-indicator" style="background: var(--c23); color: var(--c23);"></span>
+                                    خزنة الادخار المعزولة
+                                </h4>
+                                <p class="cell-subtitle">مبلغ تحجزه جانباً لا يدخل في الصرف اليومي</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" id="savingsLockInput" placeholder="مثال: 20000" inputmode="decimal">
+                                <span class="input-unit">ريال</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card bento-cell">
+                            <div>
+                                <h4 class="cell-title">
+                                    <span class="dot-indicator" style="background: var(--c11); color: var(--c11);"></span>
+                                    رصيد إضافي / تعديل يدوي
+                                </h4>
+                                <p class="cell-subtitle">يُضاف فوق صافي الراتب المستلم</p>
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="number" id="extraBudgetInput" placeholder="0" inputmode="decimal">
+                                <span class="input-unit">ريال</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. التحليل البصري: مخطط آخر 7 أيام + توزيع الفئات -->
+                <div class="section-divider">
+                    <span class="badge teal-badge">التحليل البصري وسجل تناقص الراتب</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <div class="glass-card bento-cell col-7">
+                    <div>
+                        <div class="cell-header">
+                            <h4 class="cell-title">
+                                <span class="dot-indicator" style="background: var(--c6); color: var(--c6);"></span>
+                                إيقاع الصرف (آخر 7 أيام)
+                            </h4>
+                        </div>
+                        <p class="cell-subtitle">الأعمدة الحمراء تعني تجاوز الحد اليومي الآمن</p>
+                    </div>
+                    <div class="chart-bars-container" id="sevenDaysChart"></div>
+                </div>
+
+                <div class="glass-card bento-cell col-5">
+                    <div>
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c11); color: var(--c11);"></span>
+                            أين يذهب الراتب؟
+                        </h4>
+                        <p class="cell-subtitle">أعلى الفئات استهلاكاً (بما فيها سداد الديون)</p>
+                        <div class="cat-breakdown-list" id="categoryBreakdownList"></div>
+                    </div>
+                </div>
+
+                <!-- 6. سجل تناقص الراتب اليومي التفصيلي -->
+                <div class="glass-card bento-cell col-12">
+                    <div class="cell-header" style="margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c3); color: var(--c3);"></span>
+                            سجل المصاريف وتناقص الراتب يوماً بيوم
+                        </h4>
+                        <div style="display:flex; gap:6px;">
+                            <button type="button" class="chip" id="filterDebtExpensesBtn" onclick="toggleExpenseDebtFilter()">💳 عرض سداد الديون فقط</button>
+                            <button type="button" class="chip" id="clearAllExpensesBtn" style="color: var(--c4); border-color: rgba(255,140,148,0.3);">مسح السجل</button>
+                        </div>
+                    </div>
+                    <p class="cell-subtitle" style="margin-bottom: 6px;">كل عملية تسديد دين من دفتر الديون تُخصم هنا تلقائياً وتُميّز بشريط ذهبي</p>
+
+                    <div class="expenses-timeline-list" id="expensesTimelineList"></div>
+                </div>
+
+            </main>
+        </section>
+
+        <!-- =======================================================
+             صفحة الصدقة اليومية: كل صدقة تُخصم من الراتب تلقائياً
+        ======================================================== -->
+        <section id="pageSadaqah" class="app-page">
+            <main class="bento-grid">
+
+                <div class="section-divider">
+                    <span class="badge emerald-badge">🤲 الصدقة اليومية</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <!-- 1. البطاقة الرئيسية: نسبة الصدقة من الراتب -->
+                <div class="glass-card sd-hero col-12">
+                    <div class="hero-top-bar">
+                        <span class="sync-pill">
+                            <span class="dot-indicator" style="width:7px;height:7px;background:var(--c23);"></span>
+                            <span>كل صدقة تُخصم من الراتب فوراً</span>
+                        </span>
+                        <span class="health-status-badge sd-status-badge" id="sdStatusBadge">ابدأ بأول صدقة</span>
+                    </div>
+
+                    <div class="visual-gauge-grid">
+                        <div class="radial-ring-box">
+                            <svg class="radial-svg" viewBox="0 0 140 140">
+                                <defs>
+                                    <linearGradient id="sdRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#EEAC4D"></stop>
+                                        <stop offset="100%" stop-color="#75E0B0"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <circle class="ring-bg" cx="70" cy="70" r="58"></circle>
+                                <circle class="ring-progress" id="sdRingProgress" cx="70" cy="70" r="58"></circle>
+                            </svg>
+                            <div class="ring-center-content">
+                                <div class="ring-pct-val"><span id="sdPctOfSalary">0</span>%</div>
+                                <div class="ring-pct-label">من راتبك</div>
+                                <div class="ring-sub-spent" style="color: var(--c11);">الهدف <span id="sdGoalShort">5</span>%</div>
+                            </div>
+                        </div>
+
+                        <div class="depletion-stats-col">
+                            <div class="remain-spotlight">
+                                <div class="remain-spotlight-label">إجمالي ما أخرجته صدقةً</div>
+                                <div class="remain-spotlight-val">
+                                    <span id="sdTotalHero">0</span>
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--c12);">ر.ي</span>
+                                </div>
+                            </div>
+                            <div class="depletion-mini-row">
+                                <div class="dep-mini-box">
+                                    <div class="dep-mini-label">صدقة اليوم</div>
+                                    <div class="dep-mini-val" style="color: var(--c11);"><span id="sdTodayHero">0</span> ر.ي</div>
+                                </div>
+                                <div class="dep-mini-box">
+                                    <div class="dep-mini-label">المتبقي لبلوغ هدفك</div>
+                                    <div class="dep-mini-val" style="color: var(--c23);"><span id="sdToGoalHero">0</span> ر.ي</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sd-goal-panel">
+                        <div class="sd-plant-row">
+                            <div class="sd-plant" id="sdPlant">🌰</div>
+                            <div>
+                                <div class="sd-plant-title" id="sdPlantTitle">بذرة تنتظر أول صدقة</div>
+                                <div class="sd-plant-sub" id="sdPlantSub">كل صدقة تسقي شجرتك</div>
+                            </div>
+                        </div>
+                        <div class="battery-track">
+                            <div class="battery-fill-remain sd-goal-fill" id="sdGoalFill" style="width: 0%;"></div>
+                        </div>
+                        <div class="pace-indicator-bar">
+                            <span id="sdGoalLine">تقدّمك نحو هدفك</span>
+                            <strong id="sdGoalPctText" style="color: var(--c11);">0%</strong>
+                        </div>
+                        <div class="sd-goal-edit">
+                            <span>هدفي من الراتب</span>
+                            <div class="sd-goal-input-wrap">
+                                <input type="number" id="charityGoalInput" value="5" min="0" max="100" step="0.5" inputmode="decimal" aria-label="هدف الصدقة كنسبة من الراتب">
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sd-no-salary" id="sdNoSalaryHint">
+                        أدخل راتبك في صفحة «الراتب والإضافي» لتظهر نسبة صدقتك من الراتب. يمكنك تسجيل الصدقة من الآن.
+                    </div>
+                </div>
+
+                <!-- 2. مربع إدخال صدقة اليوم -->
+                <div class="glass-card sd-entry-card col-12">
+                    <div class="cell-header" style="margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c11); color: var(--c11);"></span>
+                            كم تصدّقت اليوم؟
+                        </h4>
+                        <span class="sd-today-chip" id="sdTodayChip">اليوم: 0 ر.ي</span>
+                    </div>
+
+                    <div class="sd-amount-box">
+                        <div class="sd-amount-icon">🤲</div>
+                        <input type="number" id="sdAmountInput" placeholder="اكتب مبلغ الصدقة" inputmode="decimal" aria-label="مبلغ الصدقة">
+                        <span class="sd-amount-unit">ر.ي</span>
+                        <button type="button" class="sd-clear-btn" id="sdClearBtn">مسح ✕</button>
+                    </div>
+
+                    <div class="live-impact-preview" id="sdPreview">
+                        <span id="sdPreviewText">المتبقي من راتبك بعد الصدقة: 0 ر.ي</span>
+                        <strong id="sdPreviewPct" style="color: var(--c11);"></strong>
+                    </div>
+
+                    <div class="sd-step-grid">
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(100)">+100</button>
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(200)">+200</button>
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(500)">+500</button>
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(1000)">+1,000</button>
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(2000)">+2,000</button>
+                        <button type="button" class="sd-step-btn" onclick="sdAddAmount(5000)">+5,000</button>
+                    </div>
+
+                    <div class="sd-sub-label"><span>أو بنسبة من راتبك:</span></div>
+                    <div class="sd-pct-row" id="sdPctRow"></div>
+
+                    <div class="sd-sub-label">
+                        <span>لمن أخرجتها؟</span>
+                        <span id="sdTypeHint" style="color: var(--c11);">🤲 صدقة عامة</span>
+                    </div>
+                    <div class="sd-type-grid" id="sdTypeGrid"></div>
+
+                    <div class="compact-meta-row">
+                        <div class="sd-day-selector">
+                            <button type="button" class="sd-day-btn active" data-sdday="today">اليوم</button>
+                            <button type="button" class="sd-day-btn" data-sdday="yesterday">أمس</button>
+                        </div>
+                        <input type="text" id="sdNoteInput" class="compact-note-input" placeholder="ملاحظة (اختياري)..." maxlength="80">
+                    </div>
+
+                    <div class="action-submit-row">
+                        <button type="button" class="sd-submit-btn" id="sdSubmitBtn">
+                            <span>🤲 أخرجتُ الصدقة</span>
+                        </button>
+                        <button type="button" class="undo-last-btn" id="sdUndoBtn" title="حذف آخر صدقة وإعادة مبلغها للراتب">
+                            <span>↩️ تراجع</span>
+                        </button>
+                    </div>
+                    <div class="sd-deduct-note">يُخصم المبلغ من الراتب المتبقي ويظهر أيضاً في سجل استهلاك الراتب</div>
+                </div>
+
+                <!-- 3. تذكرة اليوم -->
+                <div class="glass-card sd-verse-card col-12">
+                    <div class="sd-verse-text" id="sdVerseText"></div>
+                    <div class="sd-verse-src" id="sdVerseSrc"></div>
+                </div>
+
+                <!-- 4. ثلاث بطاقات سريعة -->
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(238, 172, 77, 0.2); color: var(--c11);">🔥</div>
+                    <div class="insight-val"><span id="sdStreakVal">0</span> يوم</div>
+                    <div class="insight-label" id="sdStreakLabel">أيام متتالية من العطاء</div>
+                </div>
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(117, 224, 176, 0.18); color: var(--c23);">📅</div>
+                    <div class="insight-val" id="sdMonthDaysVal">0 / 0</div>
+                    <div class="insight-label">أيام العطاء هذا الشهر</div>
+                </div>
+                <div class="glass-card smart-insight-card col-4">
+                    <div class="insight-icon" style="background: rgba(0, 198, 199, 0.18); color: var(--c6);">🎯</div>
+                    <div class="insight-val" id="sdDailyNeedVal">--</div>
+                    <div class="insight-label">يومياً لبلوغ هدفك (ر.ي)</div>
+                </div>
+
+                <!-- 5. أين ذهب راتبك؟ -->
+                <div class="glass-card bento-cell col-12">
+                    <div>
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c11); color: var(--c11);"></span>
+                            حصة الصدقة من راتبك
+                        </h4>
+                        <p class="cell-subtitle">الشريط الذهبي هو الصدقة، وبقية الألوان توضح أين ذهب باقي الراتب</p>
+                    </div>
+                    <div class="sd-split-bar" id="sdSplitBar"></div>
+                    <div class="sd-split-legend" id="sdSplitLegend"></div>
+                    <div class="sd-thousand-line" id="sdThousandLine"></div>
+                </div>
+
+                <!-- 6. تقويم العطاء -->
+                <div class="glass-card bento-cell col-12">
+                    <div class="cell-header" style="margin-bottom: 0;">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c23); color: var(--c23);"></span>
+                            <span id="sdCalTitle">تقويم العطاء</span>
+                        </h4>
+                        <span class="sd-today-chip" id="sdCalCount">0 يوم</span>
+                    </div>
+                    <p class="cell-subtitle" style="margin-bottom: 0;">الأيام الملوّنة هي أيام تصدّقت فيها. المس أي يوم لترى مجموع صدقته</p>
+                    <div class="sd-cal-head" id="sdCalHead"></div>
+                    <div class="sd-cal-grid" id="sdCalGrid"></div>
+                </div>
+
+                <!-- 7. لمن أخرجت صدقتك؟ -->
+                <div class="glass-card bento-cell col-12">
+                    <div>
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c3); color: var(--c3);"></span>
+                            لمن أخرجتَ صدقتك؟
+                        </h4>
+                        <p class="cell-subtitle">توزيع صدقاتك بحسب نوعها</p>
+                        <div class="cat-breakdown-list" id="sdBreakdownList"></div>
+                    </div>
+                </div>
+
+                <!-- 8. أوسمة العطاء -->
+                <div class="glass-card bento-cell col-12">
+                    <div>
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c11); color: var(--c11);"></span>
+                            أوسمة العطاء
+                        </h4>
+                        <p class="cell-subtitle" style="margin-bottom: 0;">تُفتح تلقائياً مع استمرارك، وهي محفوظة على جهازك فقط</p>
+                    </div>
+                    <div class="sd-badges-grid" id="sdBadgesGrid"></div>
+                </div>
+
+                <!-- 9. سجل الصدقات -->
+                <div class="glass-card bento-cell col-12">
+                    <div class="cell-header" style="margin-bottom: 4px;">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--c3); color: var(--c3);"></span>
+                            سجل الصدقات
+                        </h4>
+                        <span class="sd-today-chip" id="sdLogCount">0 صدقة</span>
+                    </div>
+                    <p class="cell-subtitle" style="margin-bottom: 6px;">زر ✕ يحذف الصدقة ويعيد مبلغها للراتب</p>
+                    <div class="expenses-timeline-list" id="sdLogList"></div>
+                </div>
+
+            </main>
+        </section>
+
+        <!-- =======================================================
+             الصفحة الثالثة (3): دفتر الديون اليمني - النسخة العقيقية المدمجة
+        ======================================================== -->
+        <section id="pageDebts" class="app-page">
+            <main class="bento-grid">
+
+                <!-- لافتة دفتر الديون العقيقي ومؤشراته -->
+                <div class="glass-card agate-banner-card col-12">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                        <div>
+                            <div class="agate-eyebrow">
+                                <span class="dot-indicator" style="width:7px;height:7px;background:var(--accent-gold);"></span>
+                                <span>مربوط تلقائياً باستهلاك الراتب اليومي</span>
+                            </div>
+                            <h3 style="margin:8px 0 2px; font-size:1.15rem; font-weight:900;">💳 دفتر الديون والالتزامات</h3>
+                            <p style="margin:0; font-size:0.73rem; color:var(--accent-cream); opacity:0.9;">عند تسديد أي جزء من الدين يتم خصمه مباشرة من رصيد راتبك المتبقي</p>
+                        </div>
+                        <button type="button" class="manual-debt-btn" style="flex:0 0 auto; padding:10px 14px;" onclick="openManualDebtModal()">➕ دين جديد</button>
+                    </div>
+
+                    <div class="agate-metrics-row">
+                        <div class="agate-metric-box">
+                            <span>إجمالي الديون النشطة</span>
+                            <b id="sDebt">0 ر.ي</b>
+                        </div>
+                        <div class="agate-metric-box" style="border-top-color: var(--c23);">
+                            <span>المسدد منها</span>
+                            <b id="sPaid" style="color: var(--c23);">0 ر.ي</b>
+                        </div>
+                        <div class="agate-metric-box" style="border-top-color: var(--c4);">
+                            <span>صافي الدين المتبقي</span>
+                            <b id="sRemain" style="color: var(--c4);">0 ر.ي</b>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم الجهات المتكررة السريعة -->
+                <div class="section-divider">
+                    <span class="badge agate-badge">⚡ إضافة سريعة للجهات المتكررة</span>
+                    <div class="divider-line"></div>
+                    <button type="button" class="chip" onclick="openCustomEntityModal()" style="border-color: var(--accent-gold); color: var(--c12);">+ إضافة جهة جديدة</button>
+                </div>
+
+                <div class="col-12">
+                    <div class="quick-entities-grid" id="quickEntitiesGrid">
+                        <!-- يتم توليد الجهات الست الأساسية + أي جهة يضيفها المستخدم -->
+                    </div>
+                </div>
+
+                <!-- شريط الإدخال الصوتي واليدوي -->
+                <div class="col-12">
+                    <div class="voice-bar">
+                        <button type="button" id="voiceBtn" class="voice-btn" onclick="startVoice()">
+                            <span>🎙️ تسجيل بالصوت (مثال: أضف بقالة هائل 3000)</span>
+                        </button>
+                        <button type="button" class="manual-debt-btn" onclick="openManualDebtModal()">
+                            <span>➕ إدخال يدوي</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- تنبيه ذكي حول الجمع التراكمي والخصم من الراتب -->
+                <div class="glass-card bento-cell col-12" style="padding: 11px 14px; border-right: 4px solid var(--accent-gold);">
+                    <div style="font-size: 0.76rem; font-weight: 800; line-height: 1.6;">
+                        💡 <b>ميزة الجمع التراكمي والربط الذكي:</b> عند كتابة نفس الاسم يُضاف المبلغ تلقائياً لدينه القديم، وعند الضغط على <b>(💳 سداد جزء أو شطب)</b> يُخصم المبلغ المسدد من راتبك اليومي المتبقي!
+                    </div>
+                </div>
+
+                <!-- البحث والفلترة في سجل الديون -->
+                <div class="section-divider">
+                    <span class="badge agate-badge">📋 سجل الديون والحسابات</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <div class="col-12">
+                    <div class="debt-filter-bar">
+                        <input type="text" class="debt-search-input" id="debtSearchInput" placeholder="🔍 ابحث باسم الدائن أو المحل أو الملاحظة..." autocomplete="off" oninput="renderDebts()">
+                    </div>
+                    <div class="quick-chips" style="margin-top:0; margin-bottom:12px;">
+                        <button type="button" class="chip active" data-debtfilter="all" onclick="setDebtStatusFilter('all', this)">الكل</button>
+                        <button type="button" class="chip" data-debtfilter="active" onclick="setDebtStatusFilter('active', this)">الديون النشطة فقط</button>
+                        <button type="button" class="chip" data-debtfilter="closed" onclick="setDebtStatusFilter('closed', this)">المسددة والخالصة ✔️</button>
+                    </div>
+
+                    <div id="debtsListContainer"></div>
+                </div>
+
+            </main>
+        </section>
+
+        <!-- =======================================================
+             الصفحة الرابعة (4): الرادار المالي الشامل والملاءة (ميزة إبداعية مضافة)
+        ======================================================== -->
+        <section id="pageHub" class="app-page">
+            <main class="bento-grid">
+
+                <div class="section-divider">
+                    <span class="badge">🧭 مركز القيادة والملاءة المالية الشاملة</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <!-- بطاقة صافي الملاءة المالية الحقيقية -->
+                <div class="glass-card salary-master-card col-12">
+                    <div class="salary-master-header">
+                        <h3>💎 خلاصة الموقف المالي الشهري (الراتب مقابل الديون)</h3>
+                        <span>📊</span>
+                    </div>
+
+                    <div class="bento-subgrid">
+                        <div class="sub-box">
+                            <div class="sub-box-label">المتبقي الفعلي من الراتب</div>
+                            <div class="sub-box-val" style="color: var(--c23);"><span id="hubRemainingSalary">0</span> ر.ي</div>
+                        </div>
+                        <div class="sub-box">
+                            <div class="sub-box-label">إجمالي الديون المتبقية عليك</div>
+                            <div class="sub-box-val" style="color: var(--c4);"><span id="hubRemainingDebts">0</span> ر.ي</div>
+                        </div>
+                        <div class="sub-box">
+                            <div class="sub-box-label">ما سُدّد للديون من راتب هذا الشهر</div>
+                            <div class="sub-box-val" style="color: var(--accent-gold);"><span id="hubPaidToDebtsFromSalary">0</span> ر.ي</div>
+                        </div>
+                        <div class="sub-box">
+                            <div class="sub-box-label">رصيد خزنة الادخار المعزولة</div>
+                            <div class="sub-box-val" style="color: var(--c7);"><span id="hubSavingsReserve">0</span> ر.ي</div>
+                        </div>
+                        <div class="sub-box">
+                            <div class="sub-box-label">ما أُخرج صدقةً من الراتب</div>
+                            <div class="sub-box-val" style="color: var(--c11);"><span id="hubCharityTotal">0</span> ر.ي</div>
+                        </div>
+                        <div class="sub-box">
+                            <div class="sub-box-label">نسبة الصدقة من الراتب</div>
+                            <div class="sub-box-val" style="color: var(--c11);"><span id="hubCharityPct">0</span>%</div>
+                        </div>
+                    </div>
+
+                    <div class="final-salary-banner" style="margin-top:8px;">
+                        <div>
+                            <div class="final-salary-title">صافي الفائض الحقيقي (بعد سداد كل الديون المتبقية)</div>
+                            <div class="final-salary-sub" id="hubSolvencyVerdict">يحسب الفارق بين السيولة المتبقية وإجمالي الديون النشطة</div>
+                        </div>
+                        <div class="final-salary-number">
+                            <span id="hubNetFreeCash">0</span>
+                            <span style="font-size: 0.78rem; font-weight: 700;">ر.ي</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مستشار السداد الذكي بضغطة واحدة -->
+                <div class="glass-card bento-cell col-12">
+                    <div class="cell-header">
+                        <h4 class="cell-title">
+                            <span class="dot-indicator" style="background: var(--accent-gold); color: var(--accent-gold);"></span>
+                            🤖 مستشار سداد الديون الذكي من الراتب المتاح
+                        </h4>
+                    </div>
+                    <p class="cell-subtitle">يرشح لك الديون التي يمكنك تصفيتها أو تخفيفها الآن بحسب السيولة المتوفرة في راتبك</p>
+                    <div id="smartPayoffAdvisorBox" style="display:flex; flex-direction:column; gap:8px; margin-top:4px;"></div>
+                </div>
+
+                <!-- مشاركة التقرير الموحد الكامل -->
+                <div class="glass-card bento-cell col-12">
+                    <div class="cell-header">
+                        <h4 class="cell-title">📲 تصدير ومشاركة الملخص المالي الشامل</h4>
+                    </div>
+                    <p class="cell-subtitle">نسخ تقرير كامل يجمع (الراتب + الإضافي + المصاريف اليومية + حالة الديون) لإرساله أو حفظه في الملاحظات</p>
+                    <button type="button" class="add-expense-btn" onclick="copyUnifiedMasterReport()">
+                        <span>📋 نسخ التقرير المالي الشامل (الراتب + المصروف + الديون)</span>
+                    </button>
+                </div>
+
+            </main>
+        </section>
+
+        <!-- الشريط السفلي العائم الذكي الموحد -->
+        <div class="bottom-bar">
+            <div class="dock-metrics">
+                <div class="dock-col">
+                    <div class="net-total-label" id="dockPrimaryLabel">الراتب المستلم النهائي</div>
+                    <div class="net-total-value">
+                        <span id="netTotalDisplay">0</span><span class="net-total-currency">ر.ي</span>
+                    </div>
+                </div>
+                <div class="dock-divider"></div>
+                <div class="dock-col">
+                    <div class="net-total-label" id="dockSecondaryLabel">صافي الإضافي</div>
+                    <div class="overtime-mini-value">
+                        <span id="dockNetOvertimeDisplay">0</span><span class="net-total-currency">ر.ي</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="copy-btn" id="copyReportBtn">
+                <span>📋</span>
+                <span id="copyBtnText">نسخ الكشف</span>
+            </button>
+        </div>
+
+    </div> <!-- نهاية الحاوية الرئيسية mobile-app-container -->
+
+    <!-- =======================================================
+         النوافذ المنبثقة (Modals)
+    ======================================================== -->
+
+    <!-- 1. نافذة إضافة دين جديد / تراكمي -->
+    <div class="modal" id="manualModal">
+        <div class="modal-box">
+            <h2 id="modalTitle">➕ تسجيل دين جديد / تراكمي</h2>
+            <label>اسم صاحب الدين أو الجهة</label>
+            <input type="text" id="debtNameInput" placeholder="اكتب الاسم هنا (مثال: بقالة هائل)..." autocomplete="off">
+
+            <label>المبلغ بالريال اليمني</label>
+            <input type="number" id="debtAmountInput" min="1" placeholder="مثال: 5000" inputmode="decimal" autocomplete="off">
+
+            <label>ملاحظة أو تاريخ الاستحقاق (اختياري)</label>
+            <input type="text" id="debtDueInput" placeholder="مثال: مقاضي البيت أو نهاية الشهر" autocomplete="off">
+
+            <div class="modal-row">
+                <button type="button" class="btn-primary-modal" onclick="saveManualDebt()">حفظ واحتساب</button>
+                <button type="button" class="btn-secondary-modal" onclick="closeManualDebtModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. نافذة سداد جزء أو كل الدين (مع الخصم التلقائي من استهلاك الراتب اليومي) -->
+    <div class="modal" id="payModal">
+        <div class="modal-box">
+            <h2 id="payModalTitle">💳 تسجيل سداد دين</h2>
+            <div id="payModalCreditorInfo" style="font-size:0.8rem; color:var(--c12); margin-bottom:8px; font-weight:800;"></div>
+
+            <label>المبلغ المسدد الآن (ريال يمني)</label>
+            <input type="number" id="payInput" min="1" inputmode="decimal" autocomplete="off">
+            <input type="hidden" id="payId">
+
+            <!-- أزرار نسب سداد سريعة -->
+            <div class="quick-chips" style="margin-top:8px;">
+                <button type="button" class="chip" onclick="setQuickPayFraction(0.25)">ربع الدين (25%)</button>
+                <button type="button" class="chip" onclick="setQuickPayFraction(0.50)">نصف الدين (50%)</button>
+                <button type="button" class="chip" onclick="setQuickPayFraction(1)">كامل المتبقي (100%)</button>
+            </div>
+
+            <label>ملاحظة السداد (اختياري)</label>
+            <input type="text" id="payNoteInput" placeholder="مثال: دفعة نقدية من الراتب" autocomplete="off">
+
+            <!-- خيار الخصم التلقائي من استهلاك الراتب اليومي (مفعل افتراضياً كما طلبت) -->
+            <label class="salary-deduct-check-box" for="deductFromSalaryCheckbox">
+                <input type="checkbox" id="deductFromSalaryCheckbox" checked>
+                <div>
+                    <div style="font-size:0.8rem; font-weight:900; color:var(--c7);">خصم المبلغ المسدد من استهلاك الراتب اليومي تلقائياً</div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">سيتم إنقاص المبلغ من رصيد راتبك المتبقي وإضافته في سجل المصاريف اليومية تحت فئة (💳 سداد ديون)</div>
+                </div>
+            </label>
+
+            <div class="modal-row">
+                <button type="button" class="btn-primary-modal" onclick="confirmDebtPayment()">تأكيد السداد والخصم</button>
+                <button type="button" class="btn-secondary-modal" onclick="closePayModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. نافذة تأكيد الأمر الصوتي -->
+    <div class="modal" id="voiceModal">
+        <div class="modal-box">
+            <h2>🎙️ تأكيد الأمر الصوتي</h2>
+            <p id="heardText" style="color:var(--c7); font-size:0.78rem; font-weight:800; margin:4px 0 10px;"></p>
+            <label>الاسم المستخرج</label>
+            <input type="text" id="vName" autocomplete="off">
+            <label>المبلغ (ريال يمني)</label>
+            <input type="number" id="vAmount" min="1" inputmode="decimal" autocomplete="off">
+            <div class="modal-row">
+                <button type="button" class="btn-primary-modal" onclick="saveVoiceDebt()">تأكيد وضم الحساب</button>
+                <button type="button" class="btn-secondary-modal" onclick="closeVoiceModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. نافذة كشف حساب الدائن التفصيلي (تاريخ الإضافات والسدادات) -->
+    <div class="modal" id="debtHistoryModal">
+        <div class="modal-box">
+            <h2 id="historyModalTitle">📜 كشف حساب تفصيلي</h2>
+            <div id="historyModalSummary" style="font-size:0.78rem; margin-bottom:10px; padding:8px 12px; border-radius:12px; background:rgba(0,0,0,0.25);"></div>
+            <div id="historyModalTimeline" style="display:flex; flex-direction:column; gap:7px; max-height:260px; overflow-y:auto;"></div>
+            <div class="modal-row">
+                <button type="button" class="btn-primary-modal" id="shareDebtStatementBtn">📲 نسخ/مشاركة الكشف</button>
+                <button type="button" class="btn-secondary-modal" onclick="closeDebtHistoryModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. نافذة إضافة جهة سريعة جديدة -->
+    <div class="modal" id="customEntityModal">
+        <div class="modal-box">
+            <h2>⚡ إضافة جهة سريعة جديدة</h2>
+            <label>اسم الجهة أو المحل</label>
+            <input type="text" id="customEntityName" placeholder="مثال: صيدلية الحامد أو محطة الوقود" autocomplete="off">
+            <label>اختر أيقونة معبرة</label>
+            <input type="text" id="customEntityIcon" value="🏪" placeholder="مثال: 🏪 أو 🥖 أو ⛽">
+            <div class="modal-row">
+                <button type="button" class="btn-primary-modal" onclick="saveCustomEntity()">إضافة للجهات السريعة</button>
+                <button type="button" class="btn-secondary-modal" onclick="closeCustomEntityModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. نافذة النسخ الاحتياطي والاستعادة الشاملة -->
+    <div class="modal" id="backupModal">
+        <div class="modal-box">
+            <h2>💾 النسخ الاحتياطي والاستعادة الموحدة</h2>
+            <p style="font-size:0.76rem; color:var(--text-muted); line-height:1.6;">
+                يحفظ هذا الملف جميع بياناتك في التطبيقين معاً: (الراتب والإضافي + سجل المصاريف اليومية + سجل الديون العقيقي والدفعات).
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+                <button type="button" class="add-expense-btn" onclick="exportUnifiedBackup()">
+                    <span>📥 تحميل نسخة احتياطية كاملة (JSON)</span>
+                </button>
+                <label style="margin:6px 0 2px;">أو استعادة نسخة محفوظة سابقاً:</label>
+                <input type="file" id="importBackupFileInput" accept=".json" style="font-size:0.78rem; color:var(--text-main);">
+            </div>
+            <div class="modal-row">
+                <button type="button" class="btn-secondary-modal" onclick="closeBackupModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        /* =========================================================
+           إدارة الحالة الموحدة والترحيل الذكي للبيانات (Unified State)
+        ========================================================= */
+        const UNIFIED_STORAGE_KEY = 'bento_agate_unified_suite_v1';
+        const LEGACY_SALARY_KEY = 'bento_salary_tracker_pro_v2';
+        const LEGACY_DEBTS_KEY = 'yemeni_imperial_debts_v5';
+
+        let currentPage = 'salary';
+        let tax15Mode = 'both';
+        let instantTapMode = false;
+        let showOnlyDebtExpenses = false;
+        let debtStatusFilter = 'all';
+
+        let selectedCategory = {
+            id: 'qat',
+            name: 'قات',
+            icon: '🌿'
+        };
+
+        let expensesList = [];
+        let debts = [];
+
+        const defaultQuickEntities = [
+            { name: 'بقالة هائل', icon: '🛒' },
+            { name: 'حسن للسمك', icon: '🐟' },
+            { name: 'خالد ناصر مقوت', icon: '🌿' },
+            { name: 'خضروات وائل', icon: '🥬' },
+            { name: 'خضروات صهيب', icon: '🍅' },
+            { name: 'مكتبة المالكي', icon: '📚' }
+        ];
+
+        let customQuickEntities = [];
+
+        const defaultPresets = [
+            { catId: 'qat', catName: 'قات', catIcon: '🌿', amount: 3000 },
+            { catId: 'car', catName: 'للسياره', catIcon: '🚗', amount: 5000 },
+            { catId: 'groceries', catName: 'مقاضي ومنزل', catIcon: '🛒', amount: 4000 },
+            { catId: 'food', catName: 'مطاعم وكافيه', catIcon: '🍽️', amount: 2000 }
+        ];
+
+        // المتغيرات الحسابية المشتركة بين الصفحات الأربع
+        let computedNetReceivedSalary = 0;
+        let computedNetOvertime = 0;
+        let computedRemainingBalance = 0;
+        let computedTotalSpent = 0;
+        let computedSpendableBudget = 0;
+        let computedActiveDebtTotal = 0;
+        let computedActiveDebtPaid = 0;
+        let computedActiveDebtRemaining = 0;
+
+        const $ = id => document.getElementById(id);
+
+        const formatNumber = (num) => {
+            if (!isFinite(num)) return '0';
+            return Number(num).toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+        };
+
+        const money = n => formatNumber(n || 0) + ' ر.ي';
+
+        function getTodayISO(offsetDays = 0) {
+            const d = new Date();
+            d.setDate(d.getDate() + offsetDays);
+            return d.toISOString().split('T')[0];
+        }
+
+        function esc(s) {
+            return String(s || '').replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+            }[m]));
+        }
+
+        function showToast(message) {
+            const toast = $('toastMsg');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+        }
+
+        /* =========================================================
+           التنقل بين الصفحات الأربع وتحديث الشريط السفلي الذكي
+        ========================================================= */
+        function switchPage(pageName) {
+            currentPage = pageName;
+            document.querySelectorAll('.mega-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-page') === pageName);
+            });
+
+            $('pageSalary').classList.toggle('active-page', pageName === 'salary');
+            $('pageTracker').classList.toggle('active-page', pageName === 'tracker');
+            $('pageSadaqah').classList.toggle('active-page', pageName === 'sadaqah');
+            $('pageDebts').classList.toggle('active-page', pageName === 'debts');
+            $('pageHub').classList.toggle('active-page', pageName === 'hub');
+
+            updateBottomDock();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateBottomDock() {
+            const primaryLabel = $('dockPrimaryLabel');
+            const primaryVal = $('netTotalDisplay');
+            const secondaryLabel = $('dockSecondaryLabel');
+            const secondaryVal = $('dockNetOvertimeDisplay');
+            const copyBtnText = $('copyBtnText');
+
+            if (currentPage === 'salary') {
+                primaryLabel.textContent = 'الراتب المستلم النهائي';
+                primaryVal.textContent = formatNumber(computedNetReceivedSalary);
+                secondaryLabel.textContent = 'صافي الإضافي';
+                secondaryVal.textContent = formatNumber(computedNetOvertime);
+                copyBtnText.textContent = 'نسخ كشف الراتب';
+            } else if (currentPage === 'tracker') {
+                primaryLabel.textContent = 'الراتب المتبقي حالياً';
+                primaryVal.textContent = formatNumber(computedRemainingBalance);
+                secondaryLabel.textContent = 'إجمالي المصروف';
+                secondaryVal.textContent = formatNumber(computedTotalSpent);
+                copyBtnText.textContent = 'نسخ تقرير الصرف';
+            } else if (currentPage === 'sadaqah') {
+                const sdTotals = getCharityTotals();
+                primaryLabel.textContent = 'إجمالي ما أخرجته صدقة';
+                primaryVal.textContent = formatNumber(sdTotals.total);
+                secondaryLabel.textContent = 'المتبقي من الراتب';
+                secondaryVal.textContent = formatNumber(computedRemainingBalance);
+                copyBtnText.textContent = 'نسخ تقرير الصدقة';
+            } else if (currentPage === 'debts') {
+                primaryLabel.textContent = 'صافي الديون المتبقية';
+                primaryVal.textContent = formatNumber(computedActiveDebtRemaining);
+                secondaryLabel.textContent = 'الراتب المتاح للسداد';
+                secondaryVal.textContent = formatNumber(computedRemainingBalance);
+                copyBtnText.textContent = 'نسخ سجل الديون';
+            } else {
+                const netSolvency = computedRemainingBalance - computedActiveDebtRemaining;
+                primaryLabel.textContent = 'الفائض الحقيقي بعد الديون';
+                primaryVal.textContent = formatNumber(netSolvency);
+                secondaryLabel.textContent = 'ديون متبقية';
+                secondaryVal.textContent = formatNumber(computedActiveDebtRemaining);
+                copyBtnText.textContent = 'نسخ التقرير الشامل';
+            }
+        }
+
+        /* =========================================================
+           حسابات الصفحة الأولى (الراتب والإضافي)
+        ========================================================= */
+        function calculateAll() {
+            const salary = Math.max(0, parseFloat($('salaryInput').value) || 0);
+            const hours50 = Math.max(0, parseFloat($('hours50Input').value) || 0);
+            const hours100 = Math.max(0, parseFloat($('hours100Input').value) || 0);
+            const restaurantDeduction = Math.max(0, parseFloat($('restaurantDeductionInput').value) || 0);
+            const otherDeduction = Math.max(0, parseFloat($('otherDeductionInput').value) || 0);
+
+            const hourlyRate = salary / 240;
+            const total50 = hours50 * hourlyRate * 1.5;
+            const total100 = hours100 * hourlyRate * 2.0;
+            const grossOvertime = total50 + total100;
+            const overtimeTax15 = grossOvertime * 0.15;
+            const netOvertimeOnly = grossOvertime - overtimeTax15;
+
+            const totalGrossIncome = salary + grossOvertime;
+
+            let deductTax15 = 0;
+            const subnoteEl = $('tax15Subnote');
+            if (tax15Mode === 'both') {
+                deductTax15 = totalGrossIncome * 0.15;
+                subnoteEl.textContent = 'تُحسب بنسبة 15% من (الراتب الشامل + الإضافي)';
+            } else if (tax15Mode === 'overtime') {
+                deductTax15 = grossOvertime * 0.15;
+                subnoteEl.textContent = 'تُحسب بنسبة 15% من (الإضافي بدون الضريبة فقط)';
+            } else {
+                deductTax15 = salary * 0.15;
+                subnoteEl.textContent = 'تُحسب بنسبة 15% من (الراتب الشامل فقط)';
+            }
+
+            const deductSocial7 = salary * 0.07;
+            const deductUnited06 = salary * 0.006;
+            const totalDeductions = deductTax15 + deductSocial7 + deductUnited06 + restaurantDeduction + otherDeduction;
+            const finalReceivedSalary = totalGrossIncome - totalDeductions;
+
+            computedNetReceivedSalary = finalReceivedSalary;
+            computedNetOvertime = netOvertimeOnly;
+
+            $('hourlyRateDisplay').textContent = formatNumber(hourlyRate);
+            $('totalHoursBadge').textContent = formatNumber(hours50 + hours100);
+            $('total50Display').textContent = formatNumber(total50);
+            $('total100Display').textContent = formatNumber(total100);
+            $('grossTotalDisplay').textContent = formatNumber(grossOvertime);
+            $('taxDisplay').textContent = formatNumber(overtimeTax15);
+            $('netOvertimeOnlyDisplay').textContent = formatNumber(netOvertimeOnly);
+
+            $('totalGrossIncomeDisplay').textContent = formatNumber(totalGrossIncome);
+            $('salaryRowDisplay').textContent = formatNumber(salary);
+            $('overtimeGrossRowDisplay').textContent = formatNumber(grossOvertime);
+            $('deductTax15Display').textContent = formatNumber(deductTax15);
+            $('deductSocial7Display').textContent = formatNumber(deductSocial7);
+            $('deductUnited06Display').textContent = formatNumber(deductUnited06);
+            $('deductRestaurantDisplay').textContent = formatNumber(restaurantDeduction);
+            $('deductOtherDisplay').textContent = formatNumber(otherDeduction);
+            $('totalAllDeductionsDisplay').textContent = formatNumber(totalDeductions);
+            $('finalReceivedSalaryDisplay').textContent = formatNumber(finalReceivedSalary);
+
+            if (totalGrossIncome > 0) {
+                const taxInsTotal = deductTax15 + deductSocial7 + deductUnited06;
+                const manualTotal = restaurantDeduction + otherDeduction;
+                const positiveNet = Math.max(0, finalReceivedSalary);
+
+                const pNet = Math.round((positiveNet / totalGrossIncome) * 100);
+                const pTaxIns = Math.round((taxInsTotal / totalGrossIncome) * 100);
+                const pManual = Math.max(0, 100 - pNet - pTaxIns);
+
+                $('barNet').style.width = `${pNet}%`;
+                $('barTaxIns').style.width = `${pTaxIns}%`;
+                $('barManual').style.width = `${pManual}%`;
+                $('pctNet').textContent = pNet;
+                $('pctTaxIns').textContent = pTaxIns;
+                $('pctManual').textContent = pManual;
+            } else {
+                $('barNet').style.width = '100%';
+                $('barTaxIns').style.width = '0%';
+                $('barManual').style.width = '0%';
+                $('pctNet').textContent = '0';
+                $('pctTaxIns').textContent = '0';
+                $('pctManual').textContent = '0';
+            }
+
+            updateTrackerDashboard();
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+        }
+
+        /* =========================================================
+           حسابات الصفحة الثانية (استهلاك الراتب اليومي)
+        ========================================================= */
+        function updateTrackerDashboard() {
+            const savingsLock = Math.max(0, parseFloat($('savingsLockInput').value) || 0);
+            const extraBudget = parseFloat($('extraBudgetInput').value) || 0;
+
+            const rawStartingSalary = Math.max(0, computedNetReceivedSalary + extraBudget);
+            const spendableBudget = Math.max(0, rawStartingSalary - savingsLock);
+            computedSpendableBudget = spendableBudget;
+
+            const totalSpent = expensesList.reduce((acc, item) => acc + item.amount, 0);
+            computedTotalSpent = totalSpent;
+
+            const remainingBalance = spendableBudget - totalSpent;
+            computedRemainingBalance = remainingBalance;
+
+            let remainPct = 100;
+            let spentPct = 0;
+            if (spendableBudget > 0) {
+                spentPct = Math.min(100, Math.round((totalSpent / spendableBudget) * 100));
+                remainPct = Math.max(0, 100 - spentPct);
+            } else if (totalSpent > 0) {
+                remainPct = 0;
+                spentPct = 100;
+            }
+
+            $('startingBudgetDisplay').textContent = formatNumber(spendableBudget);
+            $('totalSpentHero').textContent = formatNumber(totalSpent);
+            $('remainingSalaryHero').textContent = formatNumber(remainingBalance);
+            $('remainPctDisplay').textContent = remainPct;
+            $('spentPctDisplay').textContent = spentPct;
+            $('savingsLockNotice').textContent = `خزنة الادخار: ${formatNumber(savingsLock)} ر.ي`;
+            $('navExpenseCount').textContent = expensesList.length;
+
+            $('undoLastExpenseBtn').classList.toggle('visible', expensesList.length > 0);
+
+            const circumference = 364.4;
+            const offset = circumference - (remainPct / 100) * circumference;
+            const radialCircle = $('salaryRadialProgress');
+            radialCircle.style.strokeDashoffset = offset;
+
+            const batteryFill = $('liquidBatteryFill');
+            const healthBadge = $('healthStatusBadge');
+            batteryFill.style.width = `${remainPct}%`;
+
+            if (spendableBudget === 0 && totalSpent === 0) {
+                radialCircle.style.stroke = 'var(--c6)';
+                healthBadge.textContent = 'أدخل الراتب للبدء';
+                healthBadge.style.color = 'var(--c7)';
+            } else if (remainPct >= 50) {
+                radialCircle.style.stroke = 'var(--c23)';
+                batteryFill.style.background = 'linear-gradient(90deg, var(--c8), var(--c23))';
+                healthBadge.textContent = 'حالة الرصيد: آمنة وممتازة';
+                healthBadge.style.color = 'var(--c23)';
+            } else if (remainPct >= 25) {
+                radialCircle.style.stroke = 'var(--c11)';
+                batteryFill.style.background = 'linear-gradient(90deg, var(--c11), var(--c12))';
+                healthBadge.textContent = 'حالة الرصيد: متوسطة (انتبه)';
+                healthBadge.style.color = 'var(--c11)';
+            } else {
+                radialCircle.style.stroke = 'var(--c5)';
+                batteryFill.style.background = 'linear-gradient(90deg, var(--c5), var(--c17))';
+                healthBadge.textContent = remainingBalance < 0 ? 'تجاوزت الراتب! (عجز)' : 'حالة الرصيد: حرجة جداً!';
+                healthBadge.style.color = 'var(--c4)';
+            }
+
+            const now = new Date();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const currentDay = now.getDate();
+            const remainingDaysInMonth = Math.max(1, daysInMonth - currentDay + 1);
+            const monthElapsedPct = Math.round((currentDay / daysInMonth) * 100);
+
+            const safeDailyLimit = Math.max(0, remainingBalance / remainingDaysInMonth);
+            $('safeDailyLimitDisplay').textContent = formatNumber(Math.round(safeDailyLimit));
+
+            const uniqueSpentDays = new Set(expensesList.map(e => e.date)).size;
+            const dailyBurnAvg = uniqueSpentDays > 0 ? (totalSpent / uniqueSpentDays) : 0;
+            $('dailyBurnAvgDisplay').textContent = formatNumber(Math.round(dailyBurnAvg));
+
+            const runwayEl = $('runwayDaysDisplay');
+            if (remainingBalance <= 0) {
+                runwayEl.textContent = '0 يوم';
+            } else if (dailyBurnAvg <= 0) {
+                runwayEl.textContent = `${remainingDaysInMonth} يوم`;
+            } else {
+                const estDays = Math.floor(remainingBalance / dailyBurnAvg);
+                runwayEl.textContent = estDays > 99 ? '+99 يوم' : `${estDays} يوم`;
+            }
+
+            $('monthPaceText').textContent = `انقضى من الشهر: ${monthElapsedPct}% | استهلكت: ${spentPct}%`;
+            const paceVerdict = $('paceVerdictText');
+            if (spentPct <= monthElapsedPct + 5) {
+                paceVerdict.textContent = 'إيقاع صرف متوازن وآمن ✅';
+                paceVerdict.style.color = 'var(--c23)';
+            } else if (spentPct <= monthElapsedPct + 20) {
+                paceVerdict.textContent = 'إيقاع صرف متسارع قليلاً ⚠️';
+                paceVerdict.style.color = 'var(--c11)';
+            } else {
+                paceVerdict.textContent = 'استهلاك سريع يفوق الزمن 🚨';
+                paceVerdict.style.color = 'var(--c4)';
+            }
+
+            updateLiveImpactPreview();
+            renderQuickPresetsBar();
+            renderSevenDaysChart(safeDailyLimit);
+            renderCategoryBreakdown(totalSpent);
+            renderExpensesTimeline(spendableBudget);
+            renderSadaqahPage();
+            updateBottomDock();
+        }
+
+        function updateLiveImpactPreview() {
+            const val = parseFloat($('dailyExpenseAmountInput').value) || 0;
+            const previewBox = $('liveImpactPreview');
+            if (val <= 0) {
+                previewBox.classList.remove('visible');
+                return;
+            }
+            previewBox.classList.add('visible');
+            const afterThis = computedRemainingBalance - val;
+            const dropPct = computedSpendableBudget > 0 ? ((val / computedSpendableBudget) * 100).toFixed(1) : 0;
+
+            $('livePreviewText').textContent = `سيصبح المتبقي بعد الخصم: ${formatNumber(afterThis)} ر.ي`;
+            $('livePreviewPct').textContent = `ينقص -${dropPct}%`;
+        }
+
+        function renderQuickPresetsBar() {
+            const bar = $('quickPresetsBar');
+            bar.innerHTML = '';
+
+            const seenCats = new Set();
+            const dynamicPresets = [];
+
+            for (let i = expensesList.length - 1; i >= 0; i--) {
+                const exp = expensesList[i];
+                if (!seenCats.has(exp.catId) && dynamicPresets.length < 5) {
+                    seenCats.add(exp.catId);
+                    dynamicPresets.push({
+                        catId: exp.catId,
+                        catName: exp.catName,
+                        catIcon: exp.catIcon,
+                        amount: exp.amount
+                    });
+                }
+            }
+
+            defaultPresets.forEach(def => {
+                if (!seenCats.has(def.catId) && dynamicPresets.length < 5) {
+                    dynamicPresets.push(def);
+                }
+            });
+
+            dynamicPresets.forEach(preset => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'preset-pill-btn';
+                btn.innerHTML = `<span>${preset.catIcon}</span><span>${preset.catName}: ${formatNumber(preset.amount)}</span>`;
+                btn.addEventListener('click', () => {
+                    commitExpenseEntry(preset.amount, {
+                        id: preset.catId,
+                        name: preset.catName,
+                        icon: preset.catIcon
+                    }, 'خصم سريع بضغطة واحدة');
+                });
+                bar.appendChild(btn);
+            });
+        }
+
+        function addQuickExpenseAmount(delta) {
+            const input = $('dailyExpenseAmountInput');
+            const current = parseFloat(input.value) || 0;
+            input.value = current + delta;
+            updateLiveImpactPreview();
+        }
+
+        function commitExpenseEntry(amount, categoryObj, customToastPrefix = '', extraMeta = {}) {
+            const dateInput = $('expenseDateInput');
+            const noteInput = $('expenseNoteInput');
+            const noteText = extraMeta.forcedNote !== undefined ? extraMeta.forcedNote : noteInput.value.trim();
+
+            // إذا اختار المستخدم فئة "سداد ديون" وكتب اسم دائن مطابق في الملاحظة بدون نافذة الديون، نخصمه من الدائن أيضاً
+            if (categoryObj.id === 'debt_pay' && !extraMeta.linkedDebtId && noteText) {
+                const matchingDebt = debts.find(d => !d.closed && d.name.trim().toLowerCase() === noteText.toLowerCase());
+                if (matchingDebt) {
+                    const paymentId = 'pay_' + Date.now();
+                    matchingDebt.paid = (matchingDebt.paid || 0) + amount;
+                    matchingDebt.history = matchingDebt.history || [];
+                    matchingDebt.history.push({
+                        id: paymentId,
+                        type: 'payment',
+                        amount: amount,
+                        date: dateInput.value || getTodayISO(0),
+                        note: 'سداد مباشر من صفحة استهلاك الراتب'
+                    });
+                    if (matchingDebt.paid >= matchingDebt.amount) {
+                        matchingDebt.paid = matchingDebt.amount;
+                        matchingDebt.closed = true;
+                    }
+                    extraMeta.linkedDebtId = matchingDebt.id;
+                    extraMeta.linkedPaymentId = paymentId;
+                }
+            }
+
+            const newEntry = {
+                id: 'exp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                amount: amount,
+                date: extraMeta.forcedDate || dateInput.value || getTodayISO(0),
+                note: noteText,
+                catId: categoryObj.id,
+                catName: categoryObj.name,
+                catIcon: categoryObj.icon,
+                linkedDebtId: extraMeta.linkedDebtId || null,
+                linkedPaymentId: extraMeta.linkedPaymentId || null,
+                timestamp: Date.now()
+            };
+
+            expensesList.push(newEntry);
+            if (!extraMeta.keepInputs) {
+                $('dailyExpenseAmountInput').value = '';
+                noteInput.value = '';
+            }
+
+            updateTrackerDashboard();
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+
+            if (!extraMeta.silentToast) {
+                const prefix = customToastPrefix ? `${customToastPrefix}: ` : '';
+                showToast(`✅ ${prefix}تم خصم ${formatNumber(amount)} ر.ي (${categoryObj.icon} ${categoryObj.name})`);
+            }
+            return newEntry;
+        }
+
+        function renderSevenDaysChart(safeDailyLimit) {
+            const container = $('sevenDaysChart');
+            container.innerHTML = '';
+
+            const daysNames = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+            const last7Days = [];
+
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const iso = d.toISOString().split('T')[0];
+                const label = i === 0 ? 'اليوم' : daysNames[d.getDay()];
+                const dayTotal = expensesList
+                    .filter(e => e.date === iso)
+                    .reduce((sum, e) => sum + e.amount, 0);
+                last7Days.push({ iso, label, total: dayTotal });
+            }
+
+            const maxVal = Math.max(...last7Days.map(d => d.total), safeDailyLimit || 1000, 1);
+
+            last7Days.forEach(day => {
+                const heightPct = Math.max(6, Math.round((day.total / maxVal) * 78));
+                const isOver = safeDailyLimit > 0 && day.total > safeDailyLimit;
+
+                const col = document.createElement('div');
+                col.className = 'bar-col';
+                col.innerHTML = `
+                    <span class="bar-val-top">${day.total > 0 ? formatNumber(Math.round(day.total / 1000)) + 'k' : '0'}</span>
+                    <div class="bar-visual ${isOver ? 'over-limit' : ''}" style="height: ${heightPct}%;" title="${formatNumber(day.total)} ر.ي"></div>
+                    <span class="bar-day-label">${day.label}</span>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        function renderCategoryBreakdown(totalSpent) {
+            const container = $('categoryBreakdownList');
+            container.innerHTML = '';
+
+            if (totalSpent <= 0) {
+                container.innerHTML = '<div style="font-size:0.74rem;color:var(--text-muted);padding:12px 0;">لم يتم تسجيل مصاريف بعد</div>';
+                return;
+            }
+
+            const catTotals = {};
+            expensesList.forEach(e => {
+                if (!catTotals[e.catId]) {
+                    catTotals[e.catId] = { name: e.catName, icon: e.catIcon, amount: 0 };
+                }
+                catTotals[e.catId].amount += e.amount;
+            });
+
+            const sortedCats = Object.values(catTotals).sort((a, b) => b.amount - a.amount).slice(0, 5);
+            const barColors = ['var(--c5)', 'var(--accent-gold)', 'var(--c6)', 'var(--c23)', 'var(--c3)'];
+
+            sortedCats.forEach((cat, idx) => {
+                const pct = Math.round((cat.amount / totalSpent) * 100);
+                const item = document.createElement('div');
+                item.className = 'cat-stat-item';
+                item.innerHTML = `
+                    <div class="cat-stat-head">
+                        <span>${cat.icon} ${esc(cat.name)}</span>
+                        <span>${pct}% (${formatNumber(cat.amount)})</span>
+                    </div>
+                    <div class="cat-stat-track">
+                        <div class="cat-stat-fill" style="width:${pct}%; background:${barColors[idx % barColors.length]};"></div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleExpenseDebtFilter() {
+            showOnlyDebtExpenses = !showOnlyDebtExpenses;
+            const btn = $('filterDebtExpensesBtn');
+            btn.classList.toggle('active', showOnlyDebtExpenses);
+            btn.textContent = showOnlyDebtExpenses ? '📋 عرض كل المصاريف' : '💳 عرض سداد الديون فقط';
+            renderExpensesTimeline(computedSpendableBudget);
+        }
+
+        function renderExpensesTimeline(spendableBudget) {
+            const container = $('expensesTimelineList');
+            container.innerHTML = '';
+
+            if (expensesList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state-box">
+                        لا توجد مصاريف يومية مسجلة حتى الآن.<br>
+                        أي عملية صرف أو تسديد دين ستظهر هنا مع الرصيد المتبقي بعدها مباشرة.
+                    </div>
+                `;
+                return;
+            }
+
+            const chronological = [...expensesList].sort((a, b) => {
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                return a.timestamp - b.timestamp;
+            });
+
+            let runningBalance = spendableBudget;
+            const enriched = chronological.map(item => {
+                runningBalance -= item.amount;
+                return { ...item, balanceAfter: runningBalance };
+            });
+
+            const filteredList = showOnlyDebtExpenses
+                ? enriched.filter(item => item.catId === 'debt_pay' || item.linkedDebtId)
+                : enriched;
+
+            if (filteredList.length === 0) {
+                container.innerHTML = `<div class="empty-state-box">لا توجد عمليات سداد ديون مخصومة من الراتب حتى الآن.</div>`;
+                return;
+            }
+
+            filteredList.reverse().forEach(item => {
+                const isDebtLinked = Boolean(item.linkedDebtId || item.catId === 'debt_pay');
+                const isCharityLinked = isCharityEntry(item);
+                const row = document.createElement('div');
+                row.className = `expense-item-card ${isDebtLinked ? 'debt-linked-item' : ''} ${isCharityLinked ? 'charity-item' : ''}`;
+                row.innerHTML = `
+                    <div class="exp-left-info">
+                        <div class="exp-cat-icon">${item.catIcon}</div>
+                        <div class="exp-details">
+                            <h5>
+                                ${esc(item.catName)}
+                                ${item.note ? `<span style="font-weight:700;font-size:0.75rem;color:var(--c12);">(${esc(item.note)})</span>` : ''}
+                            </h5>
+                            <div class="exp-meta-line">📅 ${item.date} ${item.linkedDebtId ? ' • 🔗 مرتبط بدفتر الديون' : ''}${isCharityLinked ? ' • 🤲 صدقة يومية' : ''}</div>
+                            <div class="exp-balance-after">
+                                المتبقي من الراتب بعده: ${formatNumber(item.balanceAfter)} ر.ي
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exp-right-actions">
+                        <div class="exp-amount-minus">- ${formatNumber(item.amount)} ر.ي</div>
+                        <button type="button" class="del-exp-btn" onclick="deleteExpenseItem('${item.id}')" title="حذف وإعادة المبلغ">✕</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function reverseLinkedDebtPayment(expenseItem) {
+            if (!expenseItem || !expenseItem.linkedDebtId) return false;
+            const debt = debts.find(d => d.id === expenseItem.linkedDebtId);
+            if (!debt) return false;
+
+            debt.paid = Math.max(0, (debt.paid || 0) - expenseItem.amount);
+            if (debt.paid < debt.amount) {
+                debt.closed = false;
+            }
+            if (Array.isArray(debt.history) && expenseItem.linkedPaymentId) {
+                debt.history = debt.history.filter(h => h.id !== expenseItem.linkedPaymentId);
+            }
+            return true;
+        }
+
+        function deleteExpenseItem(id) {
+            const target = expensesList.find(e => e.id === id);
+            if (!target) return;
+
+            const reversedDebt = reverseLinkedDebtPayment(target);
+            expensesList = expensesList.filter(e => e.id !== id);
+
+            updateTrackerDashboard();
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+
+            if (reversedDebt) {
+                showToast('🗑️ تم حذف عملية السداد وإعادة المبلغ للراتب ولرصيد الدين');
+            } else {
+                showToast('🗑️ تم حذف العملية وإعادة المبلغ للراتب المتبقي');
+            }
+        }
+
+        /* =========================================================
+           إدارة الصفحة الثالثة: دفتر الديون اليمني (النسخة العقيقية المدمجة)
+        ========================================================= */
+        function renderQuickEntities() {
+            const container = $('quickEntitiesGrid');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const allEntities = [...defaultQuickEntities, ...customQuickEntities];
+
+            allEntities.forEach((ent, index) => {
+                const isCustom = index >= defaultQuickEntities.length;
+                const activeDebt = debts.find(d => !d.closed && d.name.trim().toLowerCase() === ent.name.trim().toLowerCase());
+                const remAmount = activeDebt ? Math.max(0, activeDebt.amount - (activeDebt.paid || 0)) : 0;
+
+                const card = document.createElement('div');
+                card.className = 'quick-entity-card';
+                card.innerHTML = `
+                    <div class="quick-icon">${esc(ent.icon || '🏪')}</div>
+                    <div style="flex:1; min-width:0;">
+                        <div class="quick-name">${esc(ent.name)}</div>
+                        <div style="font-size:0.65rem; font-weight:800; color:${remAmount > 0 ? 'var(--c4)' : 'var(--text-muted)'};">
+                            ${remAmount > 0 ? 'عليه: ' + formatNumber(remAmount) + ' ر.ي' : 'إضافة سريعة +'}
+                        </div>
+                    </div>
+                    ${isCustom ? `<button type="button" onclick="removeCustomEntity(event, ${index - defaultQuickEntities.length})" style="background:transparent;border:none;color:var(--c4);font-weight:900;cursor:pointer;padding:2px 5px;" title="إزالة">✕</button>` : ''}
+                `;
+                card.addEventListener('click', () => quickAddDebt(ent.name));
+                container.appendChild(card);
+            });
+        }
+
+        function openCustomEntityModal() {
+            $('customEntityName').value = '';
+            $('customEntityIcon').value = '🏪';
+            $('customEntityModal').classList.add('show');
+            $('customEntityName').focus();
+        }
+
+        function closeCustomEntityModal() {
+            $('customEntityModal').classList.remove('show');
+        }
+
+        function saveCustomEntity() {
+            const name = $('customEntityName').value.trim();
+            const icon = $('customEntityIcon').value.trim() || '🏪';
+            if (!name) {
+                showToast('⚠️ يرجى كتابة اسم الجهة');
+                return;
+            }
+            customQuickEntities.push({ name, icon });
+            closeCustomEntityModal();
+            renderQuickEntities();
+            saveStateToStorage();
+            showToast(`✅ تمت إضافة "${name}" للجهات السريعة`);
+        }
+
+        function removeCustomEntity(e, customIdx) {
+            e.stopPropagation();
+            customQuickEntities.splice(customIdx, 1);
+            renderQuickEntities();
+            saveStateToStorage();
+        }
+
+        function quickAddDebt(entityName) {
+            openManualDebtModal();
+            $('debtNameInput').value = entityName;
+            $('modalTitle').textContent = `➕ إضافة لحساب: ${entityName}`;
+            $('debtAmountInput').focus();
+        }
+
+        function openManualDebtModal() {
+            $('modalTitle').textContent = '➕ تسجيل دين جديد / تراكمي';
+            $('manualModal').classList.add('show');
+            $('debtNameInput').focus();
+        }
+
+        function closeManualDebtModal() {
+            $('manualModal').classList.remove('show');
+            $('debtNameInput').value = '';
+            $('debtAmountInput').value = '';
+            $('debtDueInput').value = '';
+        }
+
+        function processDebtAddition(name, amount, note) {
+            const cleanName = (name || '').trim();
+            const amt = Number(amount);
+            if (!cleanName || !amt || amt <= 0) {
+                showToast('⚠️ يرجى كتابة الاسم والمبلغ بشكل صحيح');
+                return false;
+            }
+
+            const existingIndex = debts.findIndex(d => !d.closed && d.name.trim().toLowerCase() === cleanName.toLowerCase());
+
+            if (existingIndex !== -1) {
+                debts[existingIndex].amount += amt;
+                debts[existingIndex].history = debts[existingIndex].history || [];
+                debts[existingIndex].history.push({
+                    id: 'add_' + Date.now(),
+                    type: 'add',
+                    amount: amt,
+                    date: getTodayISO(0),
+                    note: note || 'إضافة تراكمية'
+                });
+                debts[existingIndex].date = getTodayISO(0);
+                if (note) debts[existingIndex].dueDate = note;
+                showToast(`✅ تم إضافة ${money(amt)} تراكمياً لحساب "${cleanName}"`);
+            } else {
+                debts.unshift({
+                    id: 'debt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                    name: cleanName,
+                    amount: amt,
+                    paid: 0,
+                    date: getTodayISO(0),
+                    dueDate: note || '',
+                    history: [{
+                        id: 'add_' + Date.now(),
+                        type: 'add',
+                        amount: amt,
+                        date: getTodayISO(0),
+                        note: note || 'دين ابتدائي'
+                    }],
+                    closed: false
+                });
+                showToast(`✅ تم فتح حساب دين جديد لـ "${cleanName}"`);
+            }
+
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+            return true;
+        }
+
+        function saveManualDebt() {
+            const ok = processDebtAddition($('debtNameInput').value, $('debtAmountInput').value, $('debtDueInput').value);
+            if (ok) closeManualDebtModal();
+        }
+
+        /* =========================================================
+           نظام سداد الدين الذكي المربوط باستهلاك الراتب اليومي
+        ========================================================= */
+        function openPayModal(id) {
+            const d = debts.find(x => x.id === id);
+            if (!d) return;
+            const rem = Math.max(0, d.amount - (d.paid || 0));
+
+            $('payId').value = id;
+            $('payInput').value = rem;
+            $('payNoteInput').value = '';
+            $('deductFromSalaryCheckbox').checked = true;
+            $('payModalTitle').textContent = `💳 سداد لحساب: ${d.name}`;
+            $('payModalCreditorInfo').textContent = `إجمالي الدين: ${money(d.amount)} | المسدد سابقاً: ${money(d.paid || 0)} | المتبقي حالياً: ${money(rem)}`;
+
+            $('payModal').classList.add('show');
+            $('payInput').focus();
+        }
+
+        function closePayModal() {
+            $('payModal').classList.remove('show');
+        }
+
+        function setQuickPayFraction(fraction) {
+            const id = $('payId').value;
+            const d = debts.find(x => x.id === id);
+            if (!d) return;
+            const rem = Math.max(0, d.amount - (d.paid || 0));
+            $('payInput').value = Math.max(1, Math.round(rem * fraction));
+        }
+
+        function confirmDebtPayment() {
+            const id = $('payId').value;
+            const rawVal = Number($('payInput').value);
+            if (!rawVal || rawVal <= 0) {
+                showToast('⚠️ أدخل مبلغ سداد صحيح');
+                return;
+            }
+
+            const d = debts.find(x => x.id === id);
+            if (!d) return;
+
+            const rem = Math.max(0, d.amount - (d.paid || 0));
+            const actualPaid = Math.min(rawVal, rem > 0 ? rem : rawVal);
+            const payNote = $('payNoteInput').value.trim();
+            const deductFromSalary = $('deductFromSalaryCheckbox').checked;
+            const paymentId = 'pay_' + Date.now();
+
+            d.paid = (d.paid || 0) + actualPaid;
+            d.date = getTodayISO(0);
+            d.history = d.history || [];
+
+            let isFullySettled = false;
+            if (d.paid >= d.amount) {
+                d.closed = true;
+                d.paid = d.amount;
+                isFullySettled = true;
+            }
+
+            // إذا كان خيار الخصم من استهلاك الراتب مفعلاً (الوضع الافتراضي)
+            let linkedExpenseId = null;
+            if (deductFromSalary) {
+                const expNote = `سداد دين: ${d.name}${payNote ? ' - ' + payNote : ''}${isFullySettled ? ' (مخالصة نهائية)' : ' (دفعة جزئية)'}`;
+                const createdExp = commitExpenseEntry(
+                    actualPaid,
+                    { id: 'debt_pay', name: 'سداد ديون', icon: '💳' },
+                    '',
+                    {
+                        forcedNote: expNote,
+                        forcedDate: getTodayISO(0),
+                        linkedDebtId: d.id,
+                        linkedPaymentId: paymentId,
+                        keepInputs: true,
+                        silentToast: true
+                    }
+                );
+                linkedExpenseId = createdExp.id;
+            }
+
+            d.history.push({
+                id: paymentId,
+                type: 'payment',
+                amount: actualPaid,
+                date: getTodayISO(0),
+                note: payNote || (deductFromSalary ? 'سداد مخصوم من الراتب' : 'سداد خارجي'),
+                deductedFromSalary: deductFromSalary,
+                linkedExpenseId: linkedExpenseId
+            });
+
+            closePayModal();
+            updateTrackerDashboard();
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+
+            if (deductFromSalary) {
+                showToast(`💳 تم سداد ${money(actualPaid)} لـ "${d.name}" وخصمه من استهلاك الراتب اليومي!`);
+            } else {
+                showToast(`✔️ تم تسجيل سداد ${money(actualPaid)} لـ "${d.name}"`);
+            }
+        }
+
+        function deleteDebt(id) {
+            const d = debts.find(x => x.id === id);
+            if (!d) return;
+            if (!confirm(`هل تريد حذف سجل "${d.name}" نهائياً من دفتر الديون؟`)) return;
+            debts = debts.filter(x => x.id !== id);
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+            showToast('🗑️ تم حذف السجل من دفتر الديون');
+        }
+
+        function setDebtStatusFilter(status, btnEl) {
+            debtStatusFilter = status;
+            document.querySelectorAll('[data-debtfilter]').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderDebts();
+        }
+
+        function openDebtHistoryModal(id) {
+            const d = debts.find(x => x.id === id);
+            if (!d) return;
+            const rem = Math.max(0, d.amount - (d.paid || 0));
+
+            $('historyModalTitle').textContent = `📜 كشف حساب: ${d.name}`;
+            $('historyModalSummary').innerHTML = `
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                    <span>إجمالي الدين: <b>${money(d.amount)}</b></span>
+                    <span style="color:var(--c23);">المسدد: <b>${money(d.paid || 0)}</b></span>
+                    <span style="color:var(--c4);">المتبقي: <b>${money(rem)}</b></span>
+                </div>
+            `;
+
+            const timeline = $('historyModalTimeline');
+            timeline.innerHTML = '';
+
+            const historyArr = Array.isArray(d.history) && d.history.length
+                ? d.history
+                : [{ type: 'add', amount: d.amount, date: d.date, note: 'رصيد ابتدائي' }];
+
+            historyArr.forEach(h => {
+                const isPayment = h.type === 'payment';
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:8px 11px; border-radius:11px; background:rgba(255,255,255,0.06); border-right:3.5px solid ' + (isPayment ? 'var(--c23)' : 'var(--c5)') + '; display:flex; justify-content:space-between; align-items:center; font-size:0.78rem;';
+                item.innerHTML = `
+                    <div>
+                        <div style="font-weight:800;">${isPayment ? '💳 دفعة سداد' : '➕ قيد دين'} ${h.note ? `(${esc(h.note)})` : ''}</div>
+                        <div style="font-size:0.68rem; opacity:0.75;">📅 ${h.date || d.date}</div>
+                    </div>
+                    <strong style="color:${isPayment ? 'var(--c23)' : 'var(--c4)'};">${isPayment ? '-' : '+'}${money(h.amount)}</strong>
+                `;
+                timeline.appendChild(item);
+            });
+
+            $('shareDebtStatementBtn').onclick = () => {
+                const lines = [
+                    `📜 *كشف حساب: ${d.name}*`,
+                    '────────────────────',
+                    `• إجمالي الدين التراكمي: ${money(d.amount)}`,
+                    `• إجمالي المسدد: ${money(d.paid || 0)}`,
+                    `• الصافي المتبقي: ${money(rem)}`,
+                    '────────────────────',
+                    '*سجل الحركات:*',
+                    ...historyArr.map(h => `${h.type === 'payment' ? '➖ سداد' : '➕ إضافة'}: ${money(h.amount)} (${h.date || d.date}) ${h.note ? '- ' + h.note : ''}`)
+                ].join('\n');
+
+                navigator.clipboard.writeText(lines).then(() => {
+                    showToast('📋 تم نسخ كشف حساب الدائن للحافظة!');
+                });
+            };
+
+            $('debtHistoryModal').classList.add('show');
+        }
+
+        function closeDebtHistoryModal() {
+            $('debtHistoryModal').classList.remove('show');
+        }
+
+        function renderDebts() {
+            renderQuickEntities();
+
+            const q = ($('debtSearchInput').value || '').trim().toLowerCase();
+
+            let activeTotal = 0;
+            let activePaid = 0;
+            let activeCount = 0;
+
+            debts.forEach(d => {
+                const rem = Math.max(0, d.amount - (d.paid || 0));
+                if (!d.closed && rem > 0) {
+                    activeTotal += Number(d.amount || 0);
+                    activePaid += Number(d.paid || 0);
+                    activeCount++;
+                }
+            });
+
+            computedActiveDebtTotal = activeTotal;
+            computedActiveDebtPaid = activePaid;
+            computedActiveDebtRemaining = Math.max(0, activeTotal - activePaid);
+
+            $('sDebt').textContent = money(activeTotal);
+            $('sPaid').textContent = money(activePaid);
+            $('sRemain').textContent = money(computedActiveDebtRemaining);
+            $('navDebtCount').textContent = activeCount;
+
+            const filtered = debts.filter(d => {
+                const rem = Math.max(0, d.amount - (d.paid || 0));
+                const isClosed = d.closed || rem === 0;
+                if (debtStatusFilter === 'active' && isClosed) return false;
+                if (debtStatusFilter === 'closed' && !isClosed) return false;
+                const matchName = d.name.toLowerCase().includes(q);
+                const matchNote = (d.dueDate || '').toLowerCase().includes(q);
+                return matchName || matchNote;
+            });
+
+            const container = $('debtsListContainer');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state-box">📭 لا توجد حسابات ديون مطابقة للبحث أو الفلتر الحالي</div>';
+                updateBottomDock();
+                return;
+            }
+
+            container.innerHTML = filtered.map(d => {
+                const rem = Math.max(0, d.amount - (d.paid || 0));
+                const paid = d.paid || 0;
+                const isClosed = d.closed || rem === 0;
+                const addCount = Array.isArray(d.history) ? d.history.filter(h => h.type !== 'payment').length : 1;
+                const paidPct = d.amount > 0 ? Math.min(100, Math.round((paid / d.amount) * 100)) : 100;
+
+                return `
+                <div class="agate-debt-card ${isClosed ? 'closed' : ''}">
+                    <div class="debt-card-top">
+                        <div>
+                            <h3 class="debt-creditor-title">
+                                <span>${esc(d.name)}</span>
+                                ${addCount > 1 ? `<span class="badge-cumulative">تراكمي (${addCount})</span>` : ''}
+                            </h3>
+                            <div class="debt-meta-sub">
+                                📅 آخر حركة: ${d.date} ${d.dueDate ? ' • 📝 ' + esc(d.dueDate) : ''}
+                            </div>
+                        </div>
+                        <div class="debt-numbers-col">
+                            <div class="debt-total-num">${money(d.amount)}</div>
+                            <div class="debt-rem-num" style="color:${isClosed ? 'var(--c23)' : 'var(--c4)'};">
+                                ${isClosed ? '✔️ خالص بالكامل' : 'المتبقي: ' + money(rem)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="debt-progress-track" title="نسبة السداد: ${paidPct}%">
+                        <div class="debt-progress-fill" style="width:${paidPct}%;"></div>
+                    </div>
+
+                    <div class="debt-actions-row">
+                        ${!isClosed ? `
+                            <button type="button" class="btn-pay-agate" onclick="openPayModal('${d.id}')">
+                                <span>💳 سداد جزء أو شطب (يُخصم من الراتب)</span>
+                            </button>
+                            <button type="button" class="btn-mini-action" onclick="quickAddDebt('${esc(d.name)}')" title="إضافة مبلغ جديد لهذا الدائن">➕ زيادة</button>
+                        ` : `
+                            <div style="flex:1; padding:7px 10px; border-radius:10px; background:rgba(117,224,176,0.15); color:var(--c23); font-size:0.75rem; font-weight:800; text-align:center;">
+                                ✔️ تمت المخالصة والسداد بالكامل
+                            </div>
+                        `}
+                        <button type="button" class="btn-mini-action" onclick="openDebtHistoryModal('${d.id}')" title="كشف الحساب التفصيلي">📜 الكشف</button>
+                        <button type="button" class="btn-mini-action" style="color:var(--c4);" onclick="deleteDebt('${d.id}')" title="حذف نهائي">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            updateBottomDock();
+        }
+
+        /* =========================================================
+           الأوامر الصوتية لدفتر الديون (Voice Recognition)
+        ========================================================= */
+        let recognition = null;
+        function startVoice() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) {
+                showToast('⚠️ المتصفح الحالي لا يدعم الإدخال الصوتي المباشر');
+                return;
+            }
+            recognition = new SR();
+            recognition.lang = 'ar-YE';
+            recognition.interimResults = false;
+            $('voiceBtn').classList.add('listening');
+            $('voiceBtn').innerHTML = '<span>🟢 أستمع إليك الآن... قل: أضف [الاسم] [المبلغ]</span>';
+
+            recognition.onresult = e => {
+                const text = e.results[0][0].transcript.trim();
+                parseVoiceDebt(text);
+            };
+            recognition.onerror = () => {
+                showToast('⚠️ تعذر التقاط الصوت بوضوح، حاول مرة أخرى');
+                resetVoiceBtn();
+            };
+            recognition.onend = resetVoiceBtn;
+            recognition.start();
+        }
+
+        function resetVoiceBtn() {
+            const btn = $('voiceBtn');
+            if (!btn) return;
+            btn.classList.remove('listening');
+            btn.innerHTML = '<span>🎙️ تسجيل بالصوت (مثال: أضف بقالة هائل 3000)</span>';
+        }
+
+        function normalizeDigits(s) {
+            const ar = '٠١٢٣٤٥٦٧٨٩', fa = '۰۱۲۳۴۵۶۷۸۹';
+            return String(s).replace(/[٠-٩]/g, d => ar.indexOf(d)).replace(/[۰-۹]/g, d => fa.indexOf(d));
+        }
+
+        function parseVoiceDebt(text) {
+            const t = normalizeDigits(text);
+            const nums = t.match(/[\d][\d,.\s]*/g);
+            if (!nums) {
+                showToast('⚠️ لم أتعرف على المبلغ الرقمي في كلامك');
+                return;
+            }
+            const amount = parseFloat(nums[nums.length - 1].replace(/[,\s]/g, ''));
+            let name = t.replace(nums[nums.length - 1], '').replace(/^(أضف|اضف|دين|سجل|سجّل|على|لـ|ل|حساب)/g, '').trim();
+            if (!name) name = 'جهة غير محددة';
+
+            $('heardText').textContent = 'تم التقاط العبارة: "' + text + '"';
+            $('vName').value = name;
+            $('vAmount').value = amount;
+            $('voiceModal').classList.add('show');
+        }
+
+        function closeVoiceModal() {
+            $('voiceModal').classList.remove('show');
+        }
+
+        function saveVoiceDebt() {
+            const ok = processDebtAddition($('vName').value, $('vAmount').value, 'إدخال صوتي');
+            if (ok) closeVoiceModal();
+        }
+
+        /* =========================================================
+           الصفحة الرابعة (4): الرادار المالي الشامل ومستشار السداد الذكي
+        ========================================================= */
+        function updateFinancialHub() {
+            const savingsReserve = Math.max(0, parseFloat($('savingsLockInput').value) || 0);
+            const paidToDebtsFromSalary = expensesList
+                .filter(e => e.catId === 'debt_pay' || e.linkedDebtId)
+                .reduce((sum, e) => sum + e.amount, 0);
+
+            const netFreeCash = computedRemainingBalance - computedActiveDebtRemaining;
+
+            $('hubRemainingSalary').textContent = formatNumber(computedRemainingBalance);
+            $('hubRemainingDebts').textContent = formatNumber(computedActiveDebtRemaining);
+            $('hubPaidToDebtsFromSalary').textContent = formatNumber(paidToDebtsFromSalary);
+            $('hubSavingsReserve').textContent = formatNumber(savingsReserve);
+            const hubCharity = getCharityTotals();
+            $('hubCharityTotal').textContent = formatNumber(hubCharity.total);
+            $('hubCharityPct').textContent = fmtPct(hubCharity.pct);
+            $('hubNetFreeCash').textContent = formatNumber(netFreeCash);
+
+            const verdictEl = $('hubSolvencyVerdict');
+            const freeCashEl = $('hubNetFreeCash');
+            if (computedActiveDebtRemaining === 0) {
+                verdictEl.textContent = '🎉 ممتاز! لا توجد عليك أي ديون نشطة حالياً.';
+                freeCashEl.style.color = 'var(--c23)';
+            } else if (netFreeCash >= 0) {
+                verdictEl.textContent = '✅ ملاءة مالية موجبة: راتبك المتبقي يغطي كافة ديونك بالكامل ويزيد فائض.';
+                freeCashEl.style.color = 'var(--c23)';
+            } else {
+                verdictEl.textContent = '⚠️ إجمالي الديون يتجاوز السيولة المتبقية حالياً؛ يُنصح بالسداد الجزئي المتدرج.';
+                freeCashEl.style.color = 'var(--c4)';
+            }
+
+            const advisorBox = $('smartPayoffAdvisorBox');
+            advisorBox.innerHTML = '';
+
+            const activeDebtsList = debts
+                .map(d => ({ ...d, rem: Math.max(0, d.amount - (d.paid || 0)) }))
+                .filter(d => !d.closed && d.rem > 0)
+                .sort((a, b) => a.rem - b.rem);
+
+            if (activeDebtsList.length === 0) {
+                advisorBox.innerHTML = '<div class="empty-state-box" style="padding:12px;">✨ سجل الديون خالٍ من الالتزامات النشطة.</div>';
+                return;
+            }
+
+            activeDebtsList.slice(0, 4).forEach(d => {
+                const canFullPay = computedRemainingBalance >= d.rem && d.rem > 0;
+                const row = document.createElement('div');
+                row.style.cssText = 'padding:10px 12px; border-radius:14px; background:rgba(0,0,0,0.24); border:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;';
+                row.innerHTML = `
+                    <div>
+                        <div style="font-weight:900; font-size:0.84rem;">${esc(d.name)} <span style="color:var(--c4);">(${money(d.rem)})</span></div>
+                        <div style="font-size:0.69rem; color:var(--text-muted);">
+                            ${canFullPay ? '💡 يمكنك إغلاق هذا الدين بالكامل الآن وسيبقى معك ' + money(computedRemainingBalance - d.rem) : '💡 يمكنك سداد دفعة جزئية لتخفيف الالتزام'}
+                        </div>
+                    </div>
+                    <button type="button" class="chip" style="background:linear-gradient(135deg, var(--burgundy-wine), var(--c5)); color:#fff; border-color:var(--accent-gold);" onclick="openPayModal('${d.id}')">
+                        💳 سداد الآن
+                    </button>
+                `;
+                advisorBox.appendChild(row);
+            });
+        }
+
+        function copyUnifiedMasterReport() {
+            const paidToDebts = expensesList
+                .filter(e => e.catId === 'debt_pay' || e.linkedDebtId)
+                .reduce((sum, e) => sum + e.amount, 0);
+
+            const report = [
+                '💎 *التقرير المالي الشامل (الراتب + المصروف + الديون)*',
+                '════════════════════',
+                '1️⃣ *ملخص الراتب والإضافي:*',
+                `• الراتب الشامل: ${$('salaryRowDisplay').textContent} ر.ي`,
+                `• صافي الإضافي: ${formatNumber(computedNetOvertime)} ر.ي`,
+                `• صافي الراتب المستلم النهائي: ${formatNumber(computedNetReceivedSalary)} ر.ي`,
+                '────────────────────',
+                '2️⃣ *ملخص استهلاك الراتب اليومي:*',
+                `• الميزانية القابلة للصرف: ${formatNumber(computedSpendableBudget)} ر.ي`,
+                `• إجمالي المصروف (شاملاً سداد الديون): -${formatNumber(computedTotalSpent)} ر.ي`,
+                `• المسدد للديون من الراتب: ${formatNumber(paidToDebts)} ر.ي`,
+                `• منها صدقة يومية: ${formatNumber(getCharityTotals().total)} ر.ي (${fmtPct(getCharityTotals().pct)}% من الراتب)`,
+                `• المتبقي الفعلي من الراتب الآن: ${formatNumber(computedRemainingBalance)} ر.ي`,
+                '────────────────────',
+                '3️⃣ *ملخص دفتر الديون العقيقي:*',
+                `• إجمالي الديون النشطة: ${money(computedActiveDebtTotal)}`,
+                `• المسدد منها: ${money(computedActiveDebtPaid)}`,
+                `• صافي الديون المتبقية: ${money(computedActiveDebtRemaining)}`,
+                `• الفائض الصافي بعد الديون: ${money(computedRemainingBalance - computedActiveDebtRemaining)}`
+            ].join('\n');
+
+            navigator.clipboard.writeText(report).then(() => {
+                showToast('📋 تم نسخ التقرير المالي الموحد الشامل بنجاح!');
+            });
+        }
+
+        /* =========================================================
+           الحفظ التلقائي، الترحيل من النسخ السابقة، والنسخ الاحتياطي
+        ========================================================= */
+        function stepValue(inputId, delta) {
+            const input = $(inputId);
+            const current = parseFloat(input.value) || 0;
+            input.value = Math.max(0, current + delta);
+            calculateAll();
+        }
+
+        function saveStateToStorage() {
+            const data = {
+                salary: $('salaryInput').value,
+                hours50: $('hours50Input').value,
+                hours100: $('hours100Input').value,
+                restDeduct: $('restaurantDeductionInput').value,
+                otherDeduct: $('otherDeductionInput').value,
+                tax15Mode: tax15Mode,
+                instantTapMode: instantTapMode,
+                savingsLock: $('savingsLockInput').value,
+                extraBudget: $('extraBudgetInput').value,
+                expensesList: expensesList,
+                debts: debts,
+                customQuickEntities: customQuickEntities,
+                charityGoalPct: charityGoalPct,
+                lightMode: document.body.classList.contains('light-mode')
+            };
+            localStorage.setItem(UNIFIED_STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function loadStateFromStorage() {
+            try {
+                const unifiedRaw = localStorage.getItem(UNIFIED_STORAGE_KEY);
+                if (unifiedRaw) {
+                    const data = JSON.parse(unifiedRaw);
+                    applyLoadedData(data);
+                    return;
+                }
+
+                // ترحيل تلقائي ذكي من التطبيقين السابقين إذا كانت هذه أول مرة يفتح فيها النسخة المدمجة
+                const legacySalaryRaw = localStorage.getItem(LEGACY_SALARY_KEY);
+                const legacyDebtsRaw = localStorage.getItem(LEGACY_DEBTS_KEY);
+                const migrated = {};
+
+                if (legacySalaryRaw) {
+                    Object.assign(migrated, JSON.parse(legacySalaryRaw));
+                }
+                if (legacyDebtsRaw) {
+                    migrated.debts = JSON.parse(legacyDebtsRaw);
+                }
+
+                if (Object.keys(migrated).length > 0) {
+                    applyLoadedData(migrated);
+                    saveStateToStorage();
+                }
+            } catch (e) {
+                console.error('Error loading unified state:', e);
+            }
+        }
+
+        function applyLoadedData(data) {
+            if (!data) return;
+            if (data.salary !== undefined) $('salaryInput').value = data.salary;
+            if (data.hours50 !== undefined) $('hours50Input').value = data.hours50;
+            if (data.hours100 !== undefined) $('hours100Input').value = data.hours100;
+            if (data.restDeduct !== undefined) $('restaurantDeductionInput').value = data.restDeduct;
+            if (data.otherDeduct !== undefined) $('otherDeductionInput').value = data.otherDeduct;
+            if (data.savingsLock !== undefined) $('savingsLockInput').value = data.savingsLock;
+            if (data.extraBudget !== undefined) $('extraBudgetInput').value = data.extraBudget;
+            if (Array.isArray(data.expensesList)) expensesList = data.expensesList;
+            if (Array.isArray(data.debts)) debts = data.debts;
+            if (Array.isArray(data.customQuickEntities)) customQuickEntities = data.customQuickEntities;
+            if (data.charityGoalPct !== undefined) {
+                const g = parseFloat(data.charityGoalPct);
+                charityGoalPct = isFinite(g) ? Math.min(100, Math.max(0, g)) : 5;
+                $('charityGoalInput').value = charityGoalPct;
+            }
+
+            if (data.instantTapMode) {
+                instantTapMode = true;
+                $('instantTapToggle').classList.add('active');
+            }
+
+            if (data.tax15Mode) {
+                tax15Mode = data.tax15Mode;
+                document.querySelectorAll('.tax-mode-btn').forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-taxmode') === tax15Mode);
+                });
+            }
+
+            if (data.lightMode) {
+                document.body.classList.add('light-mode');
+            }
+        }
+
+        function closeBackupModal() {
+            $('backupModal').classList.remove('show');
+        }
+
+        function exportUnifiedBackup() {
+            saveStateToStorage();
+            const raw = localStorage.getItem(UNIFIED_STORAGE_KEY) || '{}';
+            const blob = new Blob([raw], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bento_agate_unified_backup_${getTodayISO(0)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 تم تحميل النسخة الاحتياطية الموحدة بنجاح');
+        }
+
+        /* =========================================================
+           ربط الأحداث والتفاعلات (Event Listeners)
+        ========================================================= */
+        ['salaryInput', 'hours50Input', 'hours100Input', 'restaurantDeductionInput', 'otherDeductionInput', 'savingsLockInput', 'extraBudgetInput'].forEach(id => {
+            $(id).addEventListener('input', calculateAll);
+        });
+
+        document.querySelectorAll('.chip[data-salary]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.chip[data-salary]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                $('salaryInput').value = btn.getAttribute('data-salary');
+                calculateAll();
+            });
+        });
+
+        document.querySelectorAll('.tax-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tax-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                tax15Mode = btn.getAttribute('data-taxmode');
+                calculateAll();
+            });
+        });
+
+        $('clearAmountBtn').addEventListener('click', () => {
+            const input = $('dailyExpenseAmountInput');
+            input.value = '';
+            updateLiveImpactPreview();
+            input.focus();
+        });
+
+        $('dailyExpenseAmountInput').addEventListener('input', updateLiveImpactPreview);
+
+        ['dailyExpenseAmountInput', 'expenseNoteInput'].forEach(id => {
+            $(id).addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    $('addExpenseRecordBtn').click();
+                }
+            });
+        });
+
+        $('addExpenseRecordBtn').addEventListener('click', () => {
+            const amountInput = $('dailyExpenseAmountInput');
+            const amount = parseFloat(amountInput.value);
+            if (!amount || amount <= 0) {
+                showToast('⚠️ أدخل المبلغ أولاً أو اضغط أحد أزرار المبالغ السريعة');
+                amountInput.focus();
+                return;
+            }
+            commitExpenseEntry(amount, selectedCategory);
+        });
+
+        $('undoLastExpenseBtn').addEventListener('click', () => {
+            if (expensesList.length === 0) return;
+            const removed = expensesList.pop();
+            const reversedDebt = reverseLinkedDebtPayment(removed);
+            updateTrackerDashboard();
+            renderDebts();
+            updateFinancialHub();
+            saveStateToStorage();
+            showToast(`↩️ تم التراجع عن: ${formatNumber(removed.amount)} ر.ي (${removed.catName})${reversedDebt ? ' وإعادة رصيد الدين' : ''}`);
+        });
+
+        $('instantTapToggle').addEventListener('click', function() {
+            instantTapMode = !instantTapMode;
+            this.classList.toggle('active', instantTapMode);
+            saveStateToStorage();
+            showToast(instantTapMode ? '⚡ تم تفعيل الخصم الفوري بمجرد لمس الفئة!' : 'تم إيقاف الخصم الفوري بلمس الفئة');
+        });
+
+        document.querySelectorAll('.cat-pill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedCategory = {
+                    id: btn.getAttribute('data-cat'),
+                    name: btn.getAttribute('data-name'),
+                    icon: btn.getAttribute('data-icon')
+                };
+                $('selectedCatHint').textContent = `الفئة المختارة: ${selectedCategory.icon} ${selectedCategory.name}`;
+
+                const currentAmount = parseFloat($('dailyExpenseAmountInput').value);
+                if (instantTapMode && currentAmount > 0) {
+                    commitExpenseEntry(currentAmount, selectedCategory, '⚡ خصم فوري');
+                }
+            });
+        });
+
+        document.querySelectorAll('.day-pill-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.day-pill-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const mode = btn.getAttribute('data-daymode');
+                const dateInput = $('expenseDateInput');
+                const drawer = $('customDateDrawer');
+
+                if (mode === 'today') {
+                    dateInput.value = getTodayISO(0);
+                    drawer.classList.remove('show');
+                } else if (mode === 'yesterday') {
+                    dateInput.value = getTodayISO(-1);
+                    drawer.classList.remove('show');
+                } else {
+                    drawer.classList.add('show');
+                    dateInput.focus();
+                }
+            });
+        });
+
+        $('toggleBudgetSettingsBtn').addEventListener('click', () => {
+            const body = $('budgetSettingsBody');
+            const arrow = $('accordionArrow');
+            const isOpen = body.classList.toggle('open');
+            arrow.textContent = isOpen ? '▲' : '▼';
+        });
+
+        $('clearAllExpensesBtn').addEventListener('click', () => {
+            if (expensesList.length === 0) return;
+            if (confirm('هل أنت متأكد من مسح سجل المصاريف اليومية بالكامل؟')) {
+                expensesList.forEach(e => reverseLinkedDebtPayment(e));
+                expensesList = [];
+                updateTrackerDashboard();
+                renderDebts();
+                updateFinancialHub();
+                saveStateToStorage();
+                showToast('تم تصفير سجل المصاريف بالكامل');
+            }
+        });
+
+        $('themeToggleBtn').addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            saveStateToStorage();
+        });
+
+        $('openBackupModalBtn').addEventListener('click', () => {
+            $('backupModal').classList.add('show');
+        });
+
+        $('importBackupFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const parsed = JSON.parse(ev.target.result);
+                    applyLoadedData(parsed);
+                    calculateAll();
+                    closeBackupModal();
+                    showToast('✅ تم استعادة النسخة الاحتياطية بنجاح!');
+                } catch (err) {
+                    showToast('⚠️ ملف النسخة الاحتياطية غير صالح');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        $('resetBtn').addEventListener('click', () => {
+            if (currentPage === 'salary') {
+                ['salaryInput', 'hours50Input', 'hours100Input', 'restaurantDeductionInput', 'otherDeductionInput'].forEach(id => {
+                    $(id).value = '';
+                });
+                document.querySelectorAll('.chip[data-salary]').forEach(b => b.classList.remove('active'));
+                calculateAll();
+                showToast('تم تصفير حقول الراتب والإضافي');
+            } else if (currentPage === 'tracker') {
+                $('savingsLockInput').value = '';
+                $('extraBudgetInput').value = '';
+                calculateAll();
+                showToast('تم تصفير إعدادات الخزنة والرصيد الإضافي');
+            } else if (currentPage === 'sadaqah') {
+                showToast('💡 لحذف صدقة وإعادة مبلغها للراتب اضغط ✕ بجانبها في سجل الصدقات');
+            } else {
+                showToast('💡 لحذف دين معين استخدم زر الحذف داخل بطاقة الدين');
+            }
+        });
+
+        $('copyReportBtn').addEventListener('click', () => {
+            if (currentPage === 'hub') {
+                copyUnifiedMasterReport();
+                return;
+            }
+            let reportText = '';
+            if (currentPage === 'salary') {
+                reportText = [
+                    '📋 *كشف احتساب الراتب المستلم والإضافي*',
+                    '────────────────────',
+                    `• الراتب الشامل: ${$('salaryRowDisplay').textContent} ر.ي`,
+                    `• الإضافي بدون الضريبة: ${$('overtimeGrossRowDisplay').textContent} ر.ي`,
+                    `• إجمالي المستحقات: ${$('totalGrossIncomeDisplay').textContent} ر.ي`,
+                    '────────────────────',
+                    `• إجمالي الخصومات: -${$('totalAllDeductionsDisplay').textContent} ر.ي`,
+                    `✅ *صافي الراتب المستلم:* ${$('finalReceivedSalaryDisplay').textContent} ر.ي`
+                ].join('\n');
+            } else if (currentPage === 'tracker') {
+                reportText = [
+                    '📊 *تقرير استهلاك الراتب اليومي*',
+                    '────────────────────',
+                    `• الراتب القابل للصرف: ${formatNumber(computedSpendableBudget)} ر.ي`,
+                    `• إجمالي المصروف حتى الآن: -${formatNumber(computedTotalSpent)} ر.ي (${$('spentPctDisplay').textContent}%)`,
+                    `• الصافي المتبقي حالياً: ${formatNumber(computedRemainingBalance)} ر.ي (${$('remainPctDisplay').textContent}%)`,
+                    '────────────────────',
+                    `🎯 الحد اليومي الآمن: ${$('safeDailyLimitDisplay').textContent} ر.ي`,
+                    `🔥 متوسط الصرف اليومي: ${$('dailyBurnAvgDisplay').textContent} ر.ي`
+                ].join('\n');
+            } else if (currentPage === 'sadaqah') {
+                const sdT = getCharityTotals();
+                const sdCount = expensesList.filter(isCharityEntry).length;
+                reportText = [
+                    '🤲 *تقرير الصدقة اليومية*',
+                    '────────────────────',
+                    `• إجمالي ما أخرجته: ${formatNumber(sdT.total)} ر.ي (${sdCount} صدقة)`,
+                    sdT.base > 0 ? `• نسبتها من الراتب: ${fmtPct(sdT.pct)}%` : '• أدخل الراتب لحساب النسبة',
+                    `• هدفي: ${fmtPct(charityGoalPct)}% من الراتب`,
+                    '────────────────────',
+                    `• المتبقي من الراتب بعد الصدقة: ${formatNumber(computedRemainingBalance)} ر.ي`
+                ].join('\n');
+            } else {
+                const activeOnes = debts.filter(d => !d.closed && (d.amount - (d.paid || 0)) > 0);
+                reportText = [
+                    '📒 *ملخص دفتر الديون والالتزامات*',
+                    '────────────────────',
+                    `• إجمالي الديون النشطة: ${money(computedActiveDebtTotal)}`,
+                    `• المسدد منها: ${money(computedActiveDebtPaid)}`,
+                    `• صافي المتبقي: ${money(computedActiveDebtRemaining)}`,
+                    '────────────────────',
+                    ...activeOnes.map(d => `• ${d.name}: متبقي ${money(d.amount - (d.paid || 0))} (من أصل ${money(d.amount)})`)
+                ].join('\n');
+            }
+
+            navigator.clipboard.writeText(reportText).then(() => {
+                showToast('📋 تم نسخ التقرير للحافظة بنجاح!');
+            });
+        });
+
+        /* =========================================================
+           صفحة الصدقة اليومية
+           كل صدقة تُسجَّل كعملية صرف معرّفها يبدأ بـ sadaqah، فتُخصم من الراتب
+           تلقائياً وتظهر في سجل الاستهلاك والنسخ الاحتياطي وتقارير الرادار المالي.
+        ========================================================= */
+        const CHARITY_TYPES = [
+            { id: 'sadaqah_general', name: 'صدقة عامة', icon: '🤲', color: 'var(--c11)' },
+            { id: 'sadaqah_food', name: 'إطعام', icon: '🍲', color: 'var(--c17)' },
+            { id: 'sadaqah_water', name: 'سقيا ماء', icon: '💧', color: 'var(--c6)' },
+            { id: 'sadaqah_mosque', name: 'مسجد', icon: '🕌', color: 'var(--c23)' },
+            { id: 'sadaqah_orphan', name: 'كفالة يتيم', icon: '🧒', color: 'var(--c3)' },
+            { id: 'sadaqah_patient', name: 'علاج مريض', icon: '💊', color: 'var(--c5)' },
+            { id: 'sadaqah_kin', name: 'صلة رحم', icon: '🏠', color: 'var(--c24)' },
+            { id: 'sadaqah_jariya', name: 'صدقة جارية', icon: '🌳', color: 'var(--c25)' }
+        ];
+
+        // نصوص التذكير اليومية: تتبدل يومياً. يمكنك تعديلها أو إضافة غيرها هنا
+        const CHARITY_REMINDERS = [
+            { kind: 'ayah', text: 'وَمَا أَنفَقْتُم مِّن شَيْءٍ فَهُوَ يُخْلِفُهُ ۖ وَهُوَ خَيْرُ الرَّازِقِينَ', src: 'سورة سبأ، الآية 39' },
+            { kind: 'hadith', text: 'ما نقصت صدقةٌ من مال', src: 'رواه مسلم' },
+            { kind: 'ayah', text: 'لَن تَنَالُوا الْبِرَّ حَتَّىٰ تُنفِقُوا مِمَّا تُحِبُّونَ', src: 'سورة آل عمران، الآية 92' },
+            { kind: 'hadith', text: 'أحبّ الأعمال إلى الله أدومها وإن قلّ', src: 'متفق عليه' },
+            { kind: 'ayah', text: 'مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ فِي كُلِّ سُنبُلَةٍ مِّائَةُ حَبَّةٍ', src: 'سورة البقرة، الآية 261' },
+            { kind: 'hadith', text: 'اتّقوا النار ولو بشِقّ تمرة', src: 'متفق عليه' },
+            { kind: 'hadith', text: 'كلُّ امرئٍ في ظلِّ صدقته حتى يُقضى بين الناس', src: 'رواه أحمد' }
+        ];
+
+        const SD_MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        const SD_WEEKDAYS = ['سبت', 'أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة'];
+
+        let selectedCharityType = CHARITY_TYPES[0];
+        let sdDayMode = 'today';
+        let charityGoalPct = 5;
+
+        function isCharityEntry(e) {
+            return !!e && typeof e.catId === 'string' && e.catId.indexOf('sadaqah') === 0;
+        }
+
+        // تاريخ محلي (بتوقيت الجهاز) بصيغة YYYY-MM-DD
+        function localISO(offsetDays = 0) {
+            const d = new Date();
+            d.setDate(d.getDate() + offsetDays);
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        // أساس حساب النسبة: صافي الراتب المستلم + الرصيد الإضافي (كما في صفحة استهلاك الراتب)
+        function charityBase() {
+            const extra = parseFloat($('extraBudgetInput').value) || 0;
+            return Math.max(0, computedNetReceivedSalary + extra);
+        }
+
+        function fmtPct(p) {
+            if (!isFinite(p) || p <= 0) return '0';
+            if (p < 0.1) return '<0.1';
+            if (p >= 10) return String(Math.round(p));
+            return String(Math.round(p * 10) / 10);
+        }
+
+        function getCharityTotals() {
+            const total = expensesList.filter(isCharityEntry).reduce((s, e) => s + (e.amount || 0), 0);
+            const base = charityBase();
+            return { total: total, base: base, pct: base > 0 ? (total / base) * 100 : 0 };
+        }
+
+        function sdDayTotals() {
+            const byDay = {};
+            expensesList.forEach(e => {
+                if (isCharityEntry(e)) byDay[e.date] = (byDay[e.date] || 0) + e.amount;
+            });
+            return byDay;
+        }
+
+        function sdStreaks(byDay) {
+            let current = 0;
+            let off = byDay[localISO(0)] ? 0 : -1;
+            while (byDay[localISO(off)]) { current++; off--; }
+
+            let longest = 0, run = 0, prev = null;
+            Object.keys(byDay).sort().forEach(d => {
+                const t = Date.parse(d + 'T00:00:00Z');
+                if (isNaN(t)) return;
+                run = (prev !== null && t - prev === 86400000) ? run + 1 : 1;
+                prev = t;
+                if (run > longest) longest = run;
+            });
+            return { current: current, longest: longest };
+        }
+
+        function sdTypeColor(id) {
+            const t = CHARITY_TYPES.find(x => x.id === id);
+            return t ? t.color : 'var(--c11)';
+        }
+
+        function renderSadaqahPage() {
+            if (!$('pageSadaqah')) return;
+            const charity = expensesList.filter(isCharityEntry);
+            const totals = getCharityTotals();
+            const goal = Math.max(0, parseFloat(charityGoalPct) || 0);
+            const goalAmount = totals.base * goal / 100;
+            const goalProgress = goalAmount > 0 ? Math.min(100, (totals.total / goalAmount) * 100) : 0;
+            const byDay = sdDayTotals();
+            const todayTotal = byDay[localISO(0)] || 0;
+
+            const c = {
+                charity: charity,
+                total: totals.total,
+                base: totals.base,
+                pct: totals.pct,
+                goal: goal,
+                goalAmount: goalAmount,
+                goalProgress: goalProgress,
+                byDay: byDay,
+                todayTotal: todayTotal,
+                streaks: sdStreaks(byDay)
+            };
+
+            $('navSadaqahCount').textContent = charity.length;
+            $('sdUndoBtn').classList.toggle('visible', charity.length > 0);
+            $('sdTodayChip').textContent = 'اليوم: ' + formatNumber(todayTotal) + ' ر.ي';
+
+            sdRenderHero(c);
+            sdRenderInsights(c);
+            sdRenderSplit(c);
+            sdRenderCalendar(c);
+            sdRenderBreakdown(c);
+            sdRenderBadges(c);
+            sdRenderLog(c);
+            sdRenderPctChips(c.base);
+            sdUpdatePreview();
+        }
+
+        function sdRenderHero(c) {
+            const hasGoal = c.base > 0 && c.goal > 0;
+
+            $('sdPctOfSalary').textContent = fmtPct(c.pct);
+            $('sdGoalShort').textContent = fmtPct(c.goal);
+            $('sdTotalHero').textContent = formatNumber(c.total);
+            $('sdTodayHero').textContent = formatNumber(c.todayTotal);
+            $('sdToGoalHero').textContent = hasGoal ? formatNumber(Math.max(0, Math.ceil(c.goalAmount - c.total))) : '--';
+
+            const circumference = 364.4;
+            const ringFill = hasGoal ? c.goalProgress : Math.min(100, c.pct);
+            $('sdRingProgress').style.strokeDashoffset = circumference - (ringFill / 100) * circumference;
+
+            let badge;
+            if (c.total <= 0) badge = 'ابدأ بأول صدقة';
+            else if (hasGoal && c.goalProgress >= 100) badge = '🎉 أتممت هدفك';
+            else if (hasGoal) badge = Math.round(c.goalProgress) + '% من هدفك';
+            else badge = 'بارك الله لك';
+            $('sdStatusBadge').textContent = badge;
+
+            const gp = hasGoal ? c.goalProgress : (c.total > 0 ? 30 : 0);
+            let stage;
+            if (c.total <= 0) stage = ['🌰', 'بذرة تنتظر أول صدقة'];
+            else if (gp < 25) stage = ['🌱', 'برعم صغير بدأ ينمو'];
+            else if (gp < 60) stage = ['🌿', 'نبتة تشتدّ يوماً بعد يوم'];
+            else if (gp < 100) stage = ['🌳', 'شجرة تكبر وتُظلّ'];
+            else stage = ['🌳✨', 'شجرة مثمرة، بلغتَ هدفك'];
+            $('sdPlant').textContent = stage[0];
+            $('sdPlantTitle').textContent = stage[1];
+            $('sdPlantSub').textContent = c.total > 0
+                ? c.charity.length + ' صدقة بمجموع ' + formatNumber(c.total) + ' ر.ي'
+                : 'كل صدقة تسقي شجرتك';
+
+            $('sdGoalFill').style.width = (hasGoal ? c.goalProgress : 0) + '%';
+            $('sdGoalPctText').textContent = (hasGoal ? Math.round(c.goalProgress) : 0) + '%';
+            if (c.base <= 0) $('sdGoalLine').textContent = 'أدخل الراتب لحساب هدفك';
+            else if (c.goal <= 0) $('sdGoalLine').textContent = 'حدّد نسبة هدفك في الأسفل';
+            else $('sdGoalLine').textContent = 'هدفك ' + fmtPct(c.goal) + '% من الراتب = ' + formatNumber(Math.round(c.goalAmount)) + ' ر.ي';
+
+            $('sdNoSalaryHint').classList.toggle('visible', c.base <= 0);
+        }
+
+        function sdRenderInsights(c) {
+            $('sdStreakVal').textContent = c.streaks.current;
+            $('sdStreakLabel').textContent = c.streaks.longest > 0
+                ? 'أيام متتالية، الأطول: ' + c.streaks.longest
+                : 'أيام متتالية من العطاء';
+
+            const now = new Date();
+            const monthPrefix = localISO(0).slice(0, 7);
+            const daysGiven = Object.keys(c.byDay).filter(d => d.slice(0, 7) === monthPrefix).length;
+            $('sdMonthDaysVal').textContent = daysGiven + ' / ' + now.getDate();
+
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const remainingDays = Math.max(1, daysInMonth - now.getDate() + 1);
+            const needEl = $('sdDailyNeedVal');
+            if (c.base <= 0 || c.goal <= 0) needEl.textContent = '--';
+            else if (c.total >= c.goalAmount) needEl.textContent = '✓ تم';
+            else needEl.textContent = formatNumber(Math.ceil((c.goalAmount - c.total) / remainingDays));
+        }
+
+        function sdRenderSplit(c) {
+            const bar = $('sdSplitBar');
+            const legend = $('sdSplitLegend');
+            const line = $('sdThousandLine');
+            bar.innerHTML = '';
+            legend.innerHTML = '';
+
+            if (c.base <= 0) {
+                line.textContent = 'أدخل راتبك في الصفحة الأولى لتظهر حصة الصدقة من راتبك.';
+                return;
+            }
+
+            const debtPaid = expensesList
+                .filter(e => !isCharityEntry(e) && (e.catId === 'debt_pay' || e.linkedDebtId))
+                .reduce((s, e) => s + e.amount, 0);
+            const otherSpent = Math.max(0, computedTotalSpent - c.total - debtPaid);
+            const savings = Math.min(c.base, Math.max(0, parseFloat($('savingsLockInput').value) || 0));
+            const remaining = Math.max(0, computedRemainingBalance);
+
+            const parts = [
+                { key: 'charity', label: 'صدقة', amount: c.total, bg: 'linear-gradient(90deg, #EEAC4D, #f6c776)', dot: '#EEAC4D' },
+                { key: 'debt', label: 'سداد ديون', amount: debtPaid, bg: 'var(--burgundy-crimson)', dot: 'var(--burgundy-crimson)' },
+                { key: 'other', label: 'مصاريف أخرى', amount: otherSpent, bg: 'var(--c24)', dot: 'var(--c24)' },
+                { key: 'save', label: 'خزنة الادخار', amount: savings, bg: 'var(--c16)', dot: 'var(--c16)' },
+                { key: 'left', label: 'متبقي', amount: remaining, bg: 'var(--c23)', dot: 'var(--c23)' }
+            ];
+            const den = Math.max(c.base, parts.reduce((s, p) => s + p.amount, 0));
+
+            parts.forEach(p => {
+                if (p.amount <= 0) return;
+                const seg = document.createElement('div');
+                seg.className = 'sd-split-seg ' + p.key;
+                seg.style.width = ((p.amount / den) * 100) + '%';
+                seg.style.minWidth = '5px';
+                seg.style.background = p.bg;
+                seg.title = p.label + ': ' + formatNumber(p.amount) + ' ر.ي';
+                bar.appendChild(seg);
+
+                const item = document.createElement('div');
+                item.className = 'sd-legend-item';
+                item.innerHTML =
+                    '<span class="sd-legend-dot" style="background:' + p.dot + ';"></span>' +
+                    '<span>' + esc(p.label) + '</span>' +
+                    '<strong>' + esc(fmtPct((p.amount / den) * 100)) + '%</strong>';
+                legend.appendChild(item);
+            });
+
+            if (c.total > 0) {
+                line.textContent = 'من كل 1,000 ريال من راتبك أخرجتَ ' + formatNumber(Math.round(c.pct * 10)) + ' ريالاً صدقة 🌿';
+            } else {
+                line.textContent = 'ابدأ بما تيسّر؛ أحبّ الأعمال إلى الله أدومها وإن قلّ.';
+            }
+        }
+
+        function sdRenderCalendar(c) {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = now.getMonth();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const lead = (new Date(y, m, 1).getDay() + 1) % 7; // الأسبوع يبدأ السبت
+
+            $('sdCalTitle').textContent = 'تقويم عطاء ' + SD_MONTHS[m] + ' ' + y;
+            $('sdCalHead').innerHTML = SD_WEEKDAYS.map(n => '<div>' + n + '</div>').join('');
+
+            let html = '';
+            for (let i = 0; i < lead; i++) html += '<div class="sd-cal-empty"></div>';
+
+            let givenDays = 0;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const iso = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                const amt = c.byDay[iso] || 0;
+                if (amt > 0) givenDays++;
+                const cls = ['sd-cal-day', amt > 0 ? 'given' : '', d === now.getDate() ? 'today' : '', d > now.getDate() ? 'future' : '']
+                    .filter(Boolean).join(' ');
+                const label = d + ' ' + SD_MONTHS[m] + (amt > 0 ? '، صدقة ' + formatNumber(amt) + ' ر.ي' : '');
+                html += '<button type="button" class="' + cls + '" data-iso="' + iso + '" data-day="' + d + '" aria-label="' + label + '">' + d + '</button>';
+            }
+            $('sdCalGrid').innerHTML = html;
+            $('sdCalCount').textContent = givenDays + ' يوم';
+        }
+
+        function sdRenderBreakdown(c) {
+            const box = $('sdBreakdownList');
+            box.innerHTML = '';
+            if (c.total <= 0) {
+                box.innerHTML = '<div class="empty-state-box" style="padding:12px 0;">لم تُسجَّل صدقات بعد</div>';
+                return;
+            }
+            const byType = {};
+            c.charity.forEach(e => {
+                if (!byType[e.catId]) byType[e.catId] = { name: e.catName, icon: e.catIcon, amount: 0, color: sdTypeColor(e.catId) };
+                byType[e.catId].amount += e.amount;
+            });
+            Object.values(byType).sort((a, b) => b.amount - a.amount).forEach(t => {
+                const p = Math.round((t.amount / c.total) * 100);
+                const item = document.createElement('div');
+                item.className = 'cat-stat-item';
+                item.innerHTML =
+                    '<div class="cat-stat-head"><span>' + t.icon + ' ' + esc(t.name) + '</span><span>' + p + '% (' + formatNumber(t.amount) + ')</span></div>' +
+                    '<div class="cat-stat-track"><div class="cat-stat-fill" style="width:' + p + '%; background:' + t.color + ';"></div></div>';
+                box.appendChild(item);
+            });
+        }
+
+        function sdRenderBadges(c) {
+            const hasGoal = c.base > 0 && c.goal > 0;
+            const badges = [
+                { icon: '🌱', title: 'أول صدقة', hint: 'سجّل صدقتك الأولى', ok: c.charity.length >= 1 },
+                { icon: '🔥', title: 'ثلاثة أيام', hint: 'ثلاثة أيام متتالية', ok: c.streaks.longest >= 3 },
+                { icon: '🌟', title: 'أسبوع كامل', hint: 'سبعة أيام متتالية', ok: c.streaks.longest >= 7 },
+                { icon: '💎', title: 'واحد بالمئة', hint: '1% من راتبك', ok: c.pct >= 1 },
+                { icon: '🌳', title: 'عشر صدقات', hint: 'سجّل 10 صدقات', ok: c.charity.length >= 10 },
+                { icon: '🏆', title: 'بلغتَ هدفك', hint: 'أتمم هدفك من الراتب', ok: hasGoal && c.goalProgress >= 100 }
+            ];
+            $('sdBadgesGrid').innerHTML = badges.map(b =>
+                '<div class="sd-badge-tile ' + (b.ok ? 'unlocked' : '') + '">' +
+                    '<div class="ic">' + b.icon + '</div>' +
+                    '<div class="t">' + b.title + '</div>' +
+                    '<div class="h">' + b.hint + '</div>' +
+                '</div>'
+            ).join('');
+        }
+
+        function sdRenderLog(c) {
+            const box = $('sdLogList');
+            box.innerHTML = '';
+            $('sdLogCount').textContent = c.charity.length + ' صدقة';
+
+            if (c.charity.length === 0) {
+                box.innerHTML = '<div class="empty-state-box">لم تسجّل صدقة بعد.<br>اكتب مبلغاً في المربع الكبير وابدأ؛ فأحبّ الأعمال إلى الله أدومها وإن قلّ.</div>';
+                return;
+            }
+
+            const chrono = [...expensesList].sort((a, b) => {
+                if ((a.date || '') !== (b.date || '')) return (a.date || '').localeCompare(b.date || '');
+                return (a.timestamp || 0) - (b.timestamp || 0);
+            });
+            let running = computedSpendableBudget;
+            const rows = [];
+            chrono.forEach(item => {
+                running -= item.amount;
+                if (isCharityEntry(item)) rows.push(Object.assign({}, item, { balanceAfter: running }));
+            });
+
+            rows.reverse().slice(0, 40).forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'expense-item-card charity-item';
+                row.innerHTML =
+                    '<div class="exp-left-info">' +
+                        '<div class="exp-cat-icon">' + item.catIcon + '</div>' +
+                        '<div class="exp-details">' +
+                            '<h5>' + esc(item.catName) +
+                                (item.note ? ' <span style="font-weight:700;font-size:0.75rem;color:var(--c12);">(' + esc(item.note) + ')</span>' : '') +
+                            '</h5>' +
+                            '<div class="exp-meta-line">📅 ' + esc(item.date) + '</div>' +
+                            '<div class="exp-balance-after">المتبقي من الراتب بعدها: ' + formatNumber(item.balanceAfter) + ' ر.ي</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="exp-right-actions">' +
+                        '<div class="exp-amount-minus">- ' + formatNumber(item.amount) + ' ر.ي</div>' +
+                        '<button type="button" class="del-exp-btn" onclick="deleteExpenseItem(\'' + item.id + '\')" title="حذف الصدقة وإعادة المبلغ للراتب">✕</button>' +
+                    '</div>';
+                box.appendChild(row);
+            });
+
+            if (c.charity.length > 40) {
+                const more = document.createElement('div');
+                more.className = 'empty-state-box';
+                more.style.padding = '8px';
+                more.textContent = 'يظهر هنا آخر 40 صدقة، وبقيتها محفوظة في سجل الاستهلاك.';
+                box.appendChild(more);
+            }
+        }
+
+        function sdRenderPctChips(base) {
+            const row = $('sdPctRow');
+            row.innerHTML = '';
+            [0.5, 1, 2.5, 5].forEach(p => {
+                const amt = base > 0 ? Math.max(50, Math.round((base * p / 100) / 50) * 50) : 0;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'sd-pct-chip';
+                btn.disabled = base <= 0;
+                btn.innerHTML = '<b>' + p + '%</b><small>' + (base > 0 ? formatNumber(amt) : '--') + '</small>';
+                btn.addEventListener('click', () => {
+                    $('sdAmountInput').value = amt;
+                    sdUpdatePreview();
+                });
+                row.appendChild(btn);
+            });
+        }
+
+        function renderCharityTypeGrid() {
+            const grid = $('sdTypeGrid');
+            grid.innerHTML = '';
+            CHARITY_TYPES.forEach(t => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'sd-type-pill' + (t.id === selectedCharityType.id ? ' active' : '');
+                btn.setAttribute('data-type', t.id);
+                btn.innerHTML = '<span class="em">' + t.icon + '</span><span>' + esc(t.name) + '</span>';
+                grid.appendChild(btn);
+            });
+            $('sdTypeHint').textContent = selectedCharityType.icon + ' ' + selectedCharityType.name;
+        }
+
+        function sdInitVerse() {
+            const now = new Date();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const r = CHARITY_REMINDERS[dayOfYear % CHARITY_REMINDERS.length];
+            $('sdVerseText').textContent = r.kind === 'ayah' ? '﴿ ' + r.text + ' ﴾' : '« ' + r.text + ' »';
+            $('sdVerseSrc').textContent = r.src;
+        }
+
+        function sdUpdatePreview() {
+            const val = parseFloat($('sdAmountInput').value) || 0;
+            const box = $('sdPreview');
+            if (val <= 0) {
+                box.classList.remove('visible');
+                return;
+            }
+            box.classList.add('visible');
+            const base = charityBase();
+            $('sdPreviewText').textContent = 'المتبقي من راتبك بعد الصدقة: ' + formatNumber(computedRemainingBalance - val) + ' ر.ي';
+            $('sdPreviewPct').textContent = base > 0 ? '+' + fmtPct((val / base) * 100) + '% من راتبك' : '';
+        }
+
+        function sdAddAmount(delta) {
+            const input = $('sdAmountInput');
+            input.value = (parseFloat(input.value) || 0) + delta;
+            sdUpdatePreview();
+        }
+
+        function submitCharity() {
+            const input = $('sdAmountInput');
+            const amount = parseFloat(input.value);
+            if (!amount || amount <= 0) {
+                showToast('⚠️ اكتب مبلغ الصدقة أو اختر أحد المبالغ السريعة');
+                input.focus();
+                return;
+            }
+
+            if (amount > computedRemainingBalance) {
+                const msg = computedRemainingBalance > 0
+                    ? 'مبلغ الصدقة أكبر من المتبقي من راتبك (' + formatNumber(computedRemainingBalance) + ' ر.ي). هل تريد تسجيلها رغم ذلك؟'
+                    : 'لا يوجد رصيد متبقٍ في راتبك حالياً وسيصبح الرصيد بالسالب. هل تريد تسجيل الصدقة؟';
+                if (!confirm(msg)) return;
+            }
+
+            const type = selectedCharityType;
+            commitExpenseEntry(
+                amount,
+                { id: type.id, name: type.name, icon: type.icon },
+                '',
+                {
+                    forcedDate: sdDayMode === 'yesterday' ? localISO(-1) : localISO(0),
+                    forcedNote: $('sdNoteInput').value.trim(),
+                    keepInputs: true,
+                    silentToast: true
+                }
+            );
+
+            input.value = '';
+            $('sdNoteInput').value = '';
+            sdUpdatePreview();
+
+            const plant = $('sdPlant');
+            plant.classList.remove('sd-grow');
+            void plant.offsetWidth;
+            plant.classList.add('sd-grow');
+
+            showToast('🤲 تقبّل الله منك، خُصم ' + formatNumber(amount) + ' ر.ي من راتبك (' + type.icon + ' ' + type.name + ')');
+        }
+
+        function undoLastCharity() {
+            const list = expensesList.filter(isCharityEntry);
+            if (list.length === 0) return;
+            const last = list.reduce((a, b) => ((b.timestamp || 0) >= (a.timestamp || 0) ? b : a));
+            deleteExpenseItem(last.id);
+        }
+
+        $('sdAmountInput').addEventListener('input', sdUpdatePreview);
+        ['sdAmountInput', 'sdNoteInput'].forEach(id => {
+            $(id).addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    submitCharity();
+                }
+            });
+        });
+
+        $('sdClearBtn').addEventListener('click', () => {
+            $('sdAmountInput').value = '';
+            sdUpdatePreview();
+            $('sdAmountInput').focus();
+        });
+
+        $('sdSubmitBtn').addEventListener('click', submitCharity);
+        $('sdUndoBtn').addEventListener('click', undoLastCharity);
+
+        $('sdTypeGrid').addEventListener('click', (e) => {
+            const btn = e.target.closest('.sd-type-pill');
+            if (!btn) return;
+            const t = CHARITY_TYPES.find(x => x.id === btn.getAttribute('data-type'));
+            if (!t) return;
+            selectedCharityType = t;
+            renderCharityTypeGrid();
+        });
+
+        document.querySelectorAll('.sd-day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sd-day-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                sdDayMode = btn.getAttribute('data-sdday');
+            });
+        });
+
+        $('charityGoalInput').addEventListener('input', () => {
+            const v = parseFloat($('charityGoalInput').value);
+            charityGoalPct = isFinite(v) ? Math.min(100, Math.max(0, v)) : 0;
+            renderSadaqahPage();
+            saveStateToStorage();
+        });
+
+        $('sdCalGrid').addEventListener('click', (e) => {
+            const btn = e.target.closest('.sd-cal-day');
+            if (!btn) return;
+            const amt = sdDayTotals()[btn.getAttribute('data-iso')] || 0;
+            const dayLabel = btn.getAttribute('data-day') + ' ' + SD_MONTHS[new Date().getMonth()];
+            showToast(amt > 0
+                ? '📅 ' + dayLabel + ': تصدّقت بـ ' + formatNumber(amt) + ' ر.ي'
+                : '📅 ' + dayLabel + ': لا توجد صدقة مسجلة');
+        });
+
+        renderCharityTypeGrid();
+        sdInitVerse();
+
+        function initApp() {
+            $('expenseDateInput').value = getTodayISO(0);
+            loadStateFromStorage();
+            calculateAll();
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
