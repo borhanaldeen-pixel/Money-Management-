@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.borhan.moneymanager",
+      "sha256_cert_fingerprints": [
+        "28:77:D8:29:A1:09:AA:0E:C5:AB:4D:21:4F:CA:E7:D0:80:18:F6:8F:67:92:83:79:4E:E8:56:65:45:94:44:8B"
+      ]
+    }
+  }
+]
